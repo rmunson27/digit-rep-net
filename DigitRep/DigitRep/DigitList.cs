@@ -59,6 +59,9 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     /// </summary>
     public new sealed class Builder : DigitList<byte>.Builder
     {
+        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
+        public ImmutableArray<byte>.Builder ListBuilder => _listBuilder;
+
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
@@ -113,6 +116,9 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     /// </summary>
     public new sealed class Builder : DigitList<ushort>.Builder
     {
+        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
+        public ImmutableArray<ushort>.Builder ListBuilder => _listBuilder;
+
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
@@ -163,6 +169,9 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     /// </summary>
     public new sealed class Builder : DigitList<uint>.Builder
     {
+        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
+        public ImmutableArray<uint>.Builder ListBuilder => _listBuilder;
+
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
@@ -206,6 +215,11 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     /// </summary>
     public new sealed class Builder : DigitList<ulong>.Builder
     {
+        /// <summary>
+        /// Gets the builder for the list of digits.
+        /// </summary>
+        public ImmutableArray<ulong>.Builder ListBuilder => _listBuilder;
+
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ulong"/>.
