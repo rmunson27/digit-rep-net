@@ -33,6 +33,18 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         => Digits[index];
     #endregion
 
+    /// <inheritdoc cref="ByteDigitList(IEnumerable{byte})"/>
+    public ByteDigitList(params byte[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="ByteDigitList"/> class wrapping the digits passed in.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    public ByteDigitList(IEnumerable<byte> Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
     #region IEnumerable
     IEnumerator<ushort> IEnumerable<ushort>.GetEnumerator()
     {
@@ -54,6 +66,19 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         foreach (var b in Digits) yield return b;
     }
     #endregion
+
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(ByteDigitList? other) => EqualsInternal(other);
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
@@ -95,6 +120,19 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
+    /// <inheritdoc cref="UShortDigitList(IEnumerable{ushort})"/>
+    public UShortDigitList(params ushort[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="UShortDigitList"/> class wrapping the digits passed in.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    public UShortDigitList(IEnumerable<ushort> Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
     #region IEnumerable
     IEnumerator<uint> IEnumerable<uint>.GetEnumerator()
     {
@@ -111,6 +149,19 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
         foreach (var us in Digits) yield return us;
     }
     #endregion
+
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(UShortDigitList? other) => EqualsInternal(other);
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
@@ -153,6 +204,18 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
+    /// <inheritdoc cref="UIntDigitList(IEnumerable{uint})"/>
+    public UIntDigitList(params uint[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="UIntDigitList"/> class wrapping the digits passed in.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    public UIntDigitList(IEnumerable<uint> Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
     #region IEnumerable
     IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator()
     {
@@ -164,6 +227,19 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
         foreach (var ui in Digits) yield return ui;
     }
     #endregion
+
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(UIntDigitList? other) => EqualsInternal(other);
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
@@ -205,11 +281,37 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     [return: NonNegative]
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
 
+    /// <inheritdoc cref="ULongDigitList(IEnumerable{ulong})"/>
+    public ULongDigitList(params ulong[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="ULongDigitList"/> class wrapping the digits passed in.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    public ULongDigitList(IEnumerable<ulong> Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
     /// <inheritdoc cref="DigitList.GetEnumerator"/>
     private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
     {
         foreach (var ul in Digits) yield return ul;
     }
+
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(ULongDigitList? other) => EqualsInternal(other);
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
@@ -245,6 +347,23 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     [return: NonNegative] private protected override BigInteger IndexInternal([NonNegative] int index)
         => Digits[index];
 
+    /// <inheritdoc cref="BigIntegerDigitList(IEnumerable{BigInteger})"/>
+    public BigIntegerDigitList(params BigInteger[] Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
+    /// <summary>
+    /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class wrapping the digits passed in.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="Digits"/> contained a negative number.
+    /// </exception>
+    public BigIntegerDigitList(IEnumerable<BigInteger> Digits)
+        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
+    { }
+
     /// <summary>
     /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class with the list of digits to wrap.
     /// </summary>
@@ -252,14 +371,17 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     /// <exception cref="StructArgumentDefaultException">
     /// <paramref name="Digits"/> was default.
     /// </exception>
-    /// <exception cref="ArgumentException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Digits"/> contained a negative number.
     /// </exception>
     public BigIntegerDigitList([NonDefaultableStruct] ImmutableArray<BigInteger> Digits) : base(Digits)
     {
         foreach (var digit in Digits)
         {
-            if (digit < 0) throw new ArgumentException("Cannot construct a digit list with negative digits.");
+            if (digit < 0)
+            {
+                throw new ArgumentOutOfRangeException(null, "Cannot construct a digit list with negative digits.");
+            }
         }
     }
 
@@ -270,6 +392,19 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     {
         foreach (var bi in Digits) yield return bi;
     }
+
+    /// <summary>
+    /// Determines if the current instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(BigIntegerDigitList? other) => EqualsInternal(other);
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
@@ -332,6 +467,19 @@ public abstract record class DigitList<TDigit>(
     {
         foreach (var d in Digits) yield return d;
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected bool EqualsInternal<TList>(TList? other) where TList : DigitList<TDigit>
+        => other is not null && Digits == other.Digits;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected int GetHashCodeInternal() => Digits.GetHashCode();
+
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public sealed override string ToString() => $"{{ {JoinImmutableArrayWithCommas(Digits)} }}";
 
     /// <summary>
     /// A builder for a <see cref="DigitList{TDigit}"/>.
@@ -400,6 +548,22 @@ public abstract record class DigitList : IDigitList
     /// </summary>
     /// <returns></returns>
     private protected abstract IEnumerator<BigInteger> GetEnumeratorInternal();
+
+    protected static string JoinImmutableArrayWithCommas<T>(ImmutableArray<T> arr)
+    {
+        var result = "";
+        var isFirst = true;
+        foreach (var item in arr)
+        {
+            if (isFirst)
+            {
+                result += item!.ToString();
+                isFirst = false;
+            }
+            else result += $", {item}";
+        }
+        return result;
+    }
 
     /// <summary>
     /// A builder for a <see cref="DigitList"/>.
