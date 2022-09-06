@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -439,6 +440,57 @@ public abstract record class DigitList : IDigitList
         /// </summary>
         /// <returns></returns>
         private protected abstract DigitList ToListInternal();
+
+        #region Factory Methods
+        /// <summary>
+        /// Gets a new instance of this class capable of handling the smallest possible integral representation of
+        /// digits in the given base.
+        /// </summary>
+        /// <remarks>
+        /// Attempting to add digits larger than the base to the result of this method may cause an exception.
+        /// <para/>
+        /// Passing a negative <paramref name="Base"/> value to this method will not cause an exception, but in this
+        /// case the method will return a builder that can only handle <see cref="byte"/> digits.
+        /// </remarks>
+        /// <param name="Base"></param>
+        /// <returns></returns>
+        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] BigInteger Base)
+            => Base > ulong.MaxValue
+                ? new BigIntegerDigitList.Builder()
+                : NewFromBaseSizeInternal(unchecked((ulong)Base));
+
+        /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
+        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ulong Base)
+            => NewFromBaseSizeInternal(Base);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Builder NewFromBaseSizeInternal([GreaterThanOrEqualToInteger(2)] ulong Base) => Base switch
+        {
+            > uint.MaxValue => new ULongDigitList.Builder(),
+            > ushort.MaxValue => new UIntDigitList.Builder(),
+            > byte.MaxValue => new UShortDigitList.Builder(),
+            _ => new ByteDigitList.Builder(),
+        };
+
+        /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
+        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] uint Base) => Base switch
+        {
+            > ushort.MaxValue => new UIntDigitList.Builder(),
+            > byte.MaxValue => new UShortDigitList.Builder(),
+            _ => new ByteDigitList.Builder(),
+        };
+
+        /// <summary>
+        /// Gets a new instance of this class capable of handling the smallest possible integral representation of
+        /// digits in the given base.
+        /// </summary>
+        /// <remarks>
+        /// Attempting to add digits larger than the base to the result of this method may cause an exception.
+        /// </remarks>
+        /// <param name="Base"></param>
+        /// <returns></returns>
+        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ushort Base)
+            => Base > byte.MaxValue ? new UShortDigitList.Builder() : new ByteDigitList.Builder();
     }
 }
 #endregion
