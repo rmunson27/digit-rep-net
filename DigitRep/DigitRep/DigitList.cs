@@ -18,7 +18,7 @@ namespace Rem.Core.Math.Digits;
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
 public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<byte> Digits)
-    : GenericDigitList<byte>(Digits), IByteDigitList
+    : DigitList<byte>(Digits), IByteDigitList
 {
     #region Index
     ushort IUShortDigitList.this[int index] => Digits[index];
@@ -57,7 +57,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
     /// </summary>
-    public new sealed class Builder : GenericDigitList<byte>.Builder
+    public new sealed class Builder : DigitList<byte>.Builder
     {
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -68,7 +68,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
             _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override GenericDigitList<byte> ToGenericListInternal() => ToList();
+        private protected override DigitList<byte> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new ByteDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -80,7 +80,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
 public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray<ushort> Digits)
-    : GenericDigitList<ushort>(Digits), IUShortDigitList
+    : DigitList<ushort>(Digits), IUShortDigitList
 {
     #region Index
     uint IUIntDigitList.this[int index] => Digits[index];
@@ -111,7 +111,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
     /// </summary>
-    public new sealed class Builder : GenericDigitList<ushort>.Builder
+    public new sealed class Builder : DigitList<ushort>.Builder
     {
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -122,7 +122,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
             _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override GenericDigitList<ushort> ToGenericListInternal() => ToList();
+        private protected override DigitList<ushort> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new UShortDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -134,7 +134,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
 public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<uint> Digits)
-    : GenericDigitList<uint>(Digits), IUIntDigitList
+    : DigitList<uint>(Digits), IUIntDigitList
 {
     #region Index
     /// <inheritdoc cref="DigitList.this[int]"/>
@@ -161,7 +161,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
     /// </summary>
-    public new sealed class Builder : GenericDigitList<uint>.Builder
+    public new sealed class Builder : DigitList<uint>.Builder
     {
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -172,7 +172,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
             _listBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override GenericDigitList<uint> ToGenericListInternal() => ToList();
+        private protected override DigitList<uint> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new UIntDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -187,7 +187,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
 /// <paramref name="Digits"/> was default.
 /// </exception>
 public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits)
-    : GenericDigitList<ulong>(Digits), IULongDigitList
+    : DigitList<ulong>(Digits), IULongDigitList
 {
     /// <inheritdoc cref="DigitList.this[int]"/>
     public new ulong this[[NonNegative] int index] => Digits[index];
@@ -204,7 +204,7 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
     /// </summary>
-    public new sealed class Builder : GenericDigitList<ulong>.Builder
+    public new sealed class Builder : DigitList<ulong>.Builder
     {
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -215,7 +215,7 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
             _listBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override GenericDigitList<ulong> ToGenericListInternal() => ToList();
+        private protected override DigitList<ulong> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new ULongDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -225,7 +225,7 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
 /// <summary>
 /// A wrapper for a list of <see cref="BigInteger"/> digits.
 /// </summary>
-public sealed record class BigIntegerDigitList : GenericDigitList<BigInteger>
+public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 {
     [return: NonNegative] private protected override BigInteger IndexInternal([NonNegative] int index)
         => Digits[index];
@@ -259,7 +259,7 @@ public sealed record class BigIntegerDigitList : GenericDigitList<BigInteger>
     /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
     /// </summary>
-    public new sealed class Builder : GenericDigitList<BigInteger>.Builder
+    public new sealed class Builder : DigitList<BigInteger>.Builder
     {
         /// <inheritdoc/>
         public override void Add([NonNegative] BigInteger Digit)
@@ -267,7 +267,7 @@ public sealed record class BigIntegerDigitList : GenericDigitList<BigInteger>
             _listBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override GenericDigitList<BigInteger> ToGenericListInternal() => ToList();
+        private protected override DigitList<BigInteger> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new BigIntegerDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -287,7 +287,7 @@ public sealed record class BigIntegerDigitList : GenericDigitList<BigInteger>
 /// </typeparam>
 /// <param name="Digits">The list of digits to wrap.</param>
 /// <exception cref="StructArgumentDefaultException"><paramref name="Digits"/> was the default.</exception>
-public abstract record class GenericDigitList<TDigit>(
+public abstract record class DigitList<TDigit>(
     [NonDefaultableStruct] ImmutableArray<TDigit> Digits) : DigitList, IEnumerable<TDigit>
 {
     /// <inheritdoc cref="DigitList.this[int]"/>
@@ -319,7 +319,7 @@ public abstract record class GenericDigitList<TDigit>(
     }
 
     /// <summary>
-    /// A builder for a <see cref="GenericDigitList{TDigit}"/>.
+    /// A builder for a <see cref="DigitList{TDigit}"/>.
     /// </summary>
     public abstract new class Builder : DigitList.Builder
     {
@@ -332,7 +332,7 @@ public abstract record class GenericDigitList<TDigit>(
         private protected sealed override DigitList ToListInternal() => ToGenericListInternal();
 
         /// <inheritdoc cref="DigitList.Builder.ToListInternal"/>
-        private protected abstract GenericDigitList<TDigit> ToGenericListInternal();
+        private protected abstract DigitList<TDigit> ToGenericListInternal();
     }
 }
 
