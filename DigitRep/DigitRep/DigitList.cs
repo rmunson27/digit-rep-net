@@ -495,6 +495,7 @@ public abstract record class DigitList : IDigitList
 }
 #endregion
 #endregion
+#endregion
 
 #region Interfaces
 /// <summary>
