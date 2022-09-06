@@ -1,6 +1,7 @@
 ﻿using Rem.Core.Attributes;
 using Rem.Core.ComponentModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -11,48 +12,53 @@ using System.Threading.Tasks;
 namespace Rem.Core.Math.Digits;
 
 #region Classes
+#region Concrete
 /// <summary>
 /// A wrapper for a list of <see cref="byte"/> digits.
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
-public sealed record class ByteDigitList(ImmutableArray<byte> Digits) : DigitList, IByteDigitList
+public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<byte> Digits)
+    : GenericDigitList<byte>(Digits), IByteDigitList
 {
-    /// <inheritdoc/>
-    [NonNegative] public override int Count => Digits.Length;
+    #region Index
+    ushort IUShortDigitList.this[int index] => Digits[index];
 
-    /// <inheritdoc cref="ULongDigitList.Digits"/>
-    public ImmutableArray<byte> Digits
+    uint IUIntDigitList.this[int index] => Digits[index];
+
+    ulong IULongDigitList.this[int index] => Digits[index];
+
+    [return: NonNegative]
+    private protected override BigInteger IndexInternal([NonNegative] int index)
+        => Digits[index];
+    #endregion
+
+    #region IEnumerable
+    IEnumerator<ushort> IEnumerable<ushort>.GetEnumerator()
     {
-        get => _digits;
-        init => Throw.IfStructPropSetDefault(in value);
+        foreach (var b in Digits) yield return b;
     }
-    private readonly ImmutableArray<byte> _digits = Throw.IfStructArgDefault(in Digits, nameof(Digits));
 
-    /// <inheritdoc/>
-    public byte ByteAt([NonNegative] int index) => Digits[index];
+    IEnumerator<uint> IEnumerable<uint>.GetEnumerator()
+    {
+        foreach (var b in Digits) yield return b;
+    }
 
-    /// <inheritdoc/>
-    public ushort UShortAt([NonNegative] int index) => Digits[index];
+    IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator()
+    {
+        foreach (var b in Digits) yield return b;
+    }
 
-    /// <inheritdoc/>
-    public uint UIntAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    public ulong ULongAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    [return: NonNegative] public override BigInteger BigIntegerAt(int index) => Digits[index];
+    private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
+    {
+        foreach (var b in Digits) yield return b;
+    }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
     /// </summary>
-    public new sealed class Builder : DigitList.Builder
+    public new sealed class Builder : GenericDigitList<byte>.Builder
     {
-        /// <inheritdoc/>
-        public override int Count => _listBuilder.Count;
-
-        private readonly ImmutableArray<byte>.Builder _listBuilder = ImmutableArray.CreateBuilder<byte>();
-
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
@@ -62,7 +68,7 @@ public sealed record class ByteDigitList(ImmutableArray<byte> Digits) : DigitLis
             _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override DigitList ToListInternal() => ToList();
+        private protected override GenericDigitList<byte> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new ByteDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -73,41 +79,40 @@ public sealed record class ByteDigitList(ImmutableArray<byte> Digits) : DigitLis
 /// A wrapper for a list of <see cref="ushort"/> digits.
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
-public sealed record class UShortDigitList(ImmutableArray<ushort> Digits) : DigitList, IUShortDigitList
+public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray<ushort> Digits)
+    : GenericDigitList<ushort>(Digits), IUShortDigitList
 {
-    /// <inheritdoc/>
-    [NonNegative] public override int Count => Digits.Length;
+    #region Index
+    uint IUIntDigitList.this[int index] => Digits[index];
 
-    /// <inheritdoc cref="ULongDigitList.Digits"/>
-    public ImmutableArray<ushort> Digits
+    ulong IULongDigitList.this[int index] => Digits[index];
+
+    [return: NonNegative]
+    private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
+    #endregion
+
+    #region IEnumerable
+    IEnumerator<uint> IEnumerable<uint>.GetEnumerator()
     {
-        get => _digits;
-        init => Throw.IfStructPropSetDefault(in value);
+        foreach (var us in Digits) yield return us;
     }
-    private readonly ImmutableArray<ushort> _digits = Throw.IfStructArgDefault(in Digits, nameof(Digits));
 
-    /// <inheritdoc/>
-    public ushort UShortAt([NonNegative] int index) => Digits[index];
+    IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator()
+    {
+        foreach (var us in Digits) yield return us;
+    }
 
-    /// <inheritdoc/>
-    public uint UIntAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    public ulong ULongAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    [return: NonNegative] public override BigInteger BigIntegerAt(int index) => Digits[index];
+    private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
+    {
+        foreach (var us in Digits) yield return us;
+    }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
     /// </summary>
-    public new sealed class Builder : DigitList.Builder
+    public new sealed class Builder : GenericDigitList<ushort>.Builder
     {
-        /// <inheritdoc/>
-        public override int Count => _listBuilder.Count;
-
-        private readonly ImmutableArray<ushort>.Builder _listBuilder = ImmutableArray.CreateBuilder<ushort>();
-
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
@@ -117,7 +122,7 @@ public sealed record class UShortDigitList(ImmutableArray<ushort> Digits) : Digi
             _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override DigitList ToListInternal() => ToList();
+        private protected override GenericDigitList<ushort> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new UShortDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -128,38 +133,36 @@ public sealed record class UShortDigitList(ImmutableArray<ushort> Digits) : Digi
 /// A wrapper for a list of <see cref="uint"/> digits.
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
-public sealed record class UIntDigitList(ImmutableArray<uint> Digits) : DigitList, IUIntDigitList
+public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<uint> Digits)
+    : GenericDigitList<uint>(Digits), IUIntDigitList
 {
-    /// <inheritdoc/>
-    [NonNegative] public override int Count => Digits.Length;
+    #region Index
+    /// <inheritdoc cref="DigitList.this[int]"/>
+    public new uint this[[NonNegative] int index] => Digits[index];
 
-    /// <inheritdoc cref="ULongDigitList.Digits"/>
-    public ImmutableArray<uint> Digits
+    ulong IULongDigitList.this[int index] => Digits[index];
+
+    [return: NonNegative]
+    private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
+    #endregion
+
+    #region IEnumerable
+    IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator()
     {
-        get => _digits;
-        init => Throw.IfStructPropSetDefault(in value);
+        foreach (var ui in Digits) yield return ui;
     }
-    private readonly ImmutableArray<uint> _digits = Throw.IfStructArgDefault(in Digits, nameof(Digits));
 
-    /// <inheritdoc/>
-    public uint UIntAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    public ulong ULongAt([NonNegative] int index) => Digits[index];
-
-    /// <inheritdoc/>
-    [return: NonNegative] public override BigInteger BigIntegerAt(int index) => Digits[index];
+    private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
+    {
+        foreach (var ui in Digits) yield return ui;
+    }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
     /// </summary>
-    public new sealed class Builder : DigitList.Builder
+    public new sealed class Builder : GenericDigitList<uint>.Builder
     {
-        /// <inheritdoc/>
-        public override int Count => _listBuilder.Count;
-
-        private readonly ImmutableArray<uint>.Builder _listBuilder = ImmutableArray.CreateBuilder<uint>();
-
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
@@ -169,7 +172,7 @@ public sealed record class UIntDigitList(ImmutableArray<uint> Digits) : DigitLis
             _listBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override DigitList ToListInternal() => ToList();
+        private protected override GenericDigitList<uint> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new UIntDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -183,40 +186,26 @@ public sealed record class UIntDigitList(ImmutableArray<uint> Digits) : DigitLis
 /// <exception cref="StructArgumentDefaultException">
 /// <paramref name="Digits"/> was default.
 /// </exception>
-public sealed record class ULongDigitList(ImmutableArray<ulong> Digits) : DigitList, IULongDigitList
+public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits)
+    : GenericDigitList<ulong>(Digits), IULongDigitList
 {
-    /// <inheritdoc/>
-    [NonNegative] public override int Count => Digits.Length;
+    /// <inheritdoc cref="DigitList.this[int]"/>
+    public new ulong this[[NonNegative] int index] => Digits[index];
 
-    /// <summary>
-    /// Gets or initializes the list of digits stored.
-    /// </summary>
-    /// <exception cref="StructPropertySetDefaultException">
-    /// This property was initialized to a default array.
-    /// </exception>
-    public ImmutableArray<ulong> Digits
+    [return: NonNegative]
+    private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
+
+    /// <inheritdoc cref="DigitList.GetEnumerator"/>
+    private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
     {
-        get => _digits;
-        init => Throw.IfStructPropSetDefault(in value);
+        foreach (var ul in Digits) yield return ul;
     }
-    private readonly ImmutableArray<ulong> _digits = Throw.IfStructArgDefault(in Digits, nameof(Digits));
-
-    /// <inheritdoc/>
-    public ulong ULongAt(int index) => Digits[index];
-
-    /// <inheritdoc/>
-    [return: NonNegative] public override BigInteger BigIntegerAt(int index) => Digits[index];
 
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
     /// </summary>
-    public new sealed class Builder : DigitList.Builder
+    public new sealed class Builder : GenericDigitList<ulong>.Builder
     {
-        /// <inheritdoc/>
-        public override int Count => _listBuilder.Count;
-
-        private readonly ImmutableArray<ulong>.Builder _listBuilder = ImmutableArray.CreateBuilder<ulong>();
-
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ulong"/>.
@@ -226,7 +215,7 @@ public sealed record class ULongDigitList(ImmutableArray<ulong> Digits) : DigitL
             _listBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override DigitList ToListInternal() => ToList();
+        private protected override GenericDigitList<ulong> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new ULongDigitList ToList() => new(_listBuilder.ToImmutable());
@@ -236,75 +225,114 @@ public sealed record class ULongDigitList(ImmutableArray<ulong> Digits) : DigitL
 /// <summary>
 /// A wrapper for a list of <see cref="BigInteger"/> digits.
 /// </summary>
-/// <param name="Digits">The list of digits to wrap.</param>
-/// <exception cref="StructArgumentDefaultException">
-/// <paramref name="Digits"/> was default.
-/// </exception>
-/// <exception cref="ArgumentException">
-/// <paramref name="Digits"/> contained a negative number.
-/// </exception>
-public sealed record class BigIntegerDigitList(ImmutableArray<BigInteger> Digits) : DigitList
+public sealed record class BigIntegerDigitList : GenericDigitList<BigInteger>
 {
-    /// <inheritdoc/>
-    [NonNegative] public override int Count => Digits.Length;
+    [return: NonNegative] private protected override BigInteger IndexInternal([NonNegative] int index)
+        => Digits[index];
 
     /// <summary>
-    /// Gets or initializes the list of digits stored.
+    /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class with the list of digits to wrap.
     /// </summary>
-    /// <exception cref="StructPropertySetDefaultException">
-    /// This property was initialized to a default array.
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
     /// </exception>
-    /// <exception cref="PropertySetException">
-    /// This property was initialized to a list that contained a negative number.
+    /// <exception cref="ArgumentException">
+    /// <paramref name="Digits"/> contained a negative number.
     /// </exception>
-    public ImmutableArray<BigInteger> Digits
+    public BigIntegerDigitList([NonDefaultableStruct] ImmutableArray<BigInteger> Digits) : base(Digits)
     {
-        get => _digits;
-        init => CheckDigitsPropertySet(in value);
-    }
-    private readonly ImmutableArray<BigInteger> _digits = CheckDigitsArgument(in Digits);
-
-    private static ImmutableArray<BigInteger> CheckDigitsArgument(in ImmutableArray<BigInteger> Digits)
-    {
-        foreach (var digit in Throw.IfStructArgDefault(in Digits, nameof(Digits)))
+        foreach (var digit in Digits)
         {
             if (digit < 0) throw new ArgumentException("Cannot construct a digit list with negative digits.");
         }
-        return Digits;
     }
 
-    private static ImmutableArray<BigInteger> CheckDigitsPropertySet(in ImmutableArray<BigInteger> Digits)
+    /// <inheritdoc cref="DigitList.GetEnumerator"/>
+    public new ImmutableArray<BigInteger>.Enumerator GetEnumerator() => Digits.GetEnumerator();
+
+    private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
     {
-        foreach (var digit in Throw.IfStructPropSetDefault(in Digits, nameof(Digits)))
-        {
-            if (digit < 0) throw new PropertySetException("Cannot initialize a digit list with negative digits.");
-        }
-        return Digits;
+        foreach (var bi in Digits) yield return bi;
     }
-
-    /// <inheritdoc/>
-    [return: NonNegative] public override BigInteger BigIntegerAt(int index) => Digits[index];
 
     /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
     /// </summary>
-    public new sealed class Builder : DigitList.Builder
+    public new sealed class Builder : GenericDigitList<BigInteger>.Builder
     {
-        /// <inheritdoc/>
-        public override int Count => _listBuilder.Count;
-
-        private readonly ImmutableArray<BigInteger>.Builder _listBuilder = ImmutableArray.CreateBuilder<BigInteger>();
-
         /// <inheritdoc/>
         public override void Add([NonNegative] BigInteger Digit)
         {
             _listBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
         }
 
-        private protected override DigitList ToListInternal() => ToList();
+        private protected override GenericDigitList<BigInteger> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
         public new BigIntegerDigitList ToList() => new(_listBuilder.ToImmutable());
+    }
+}
+#endregion
+
+#region Abstract
+/// <summary>
+/// A wrapper for a list of digits of a specific generic type.
+/// </summary>
+/// <typeparam name="TDigit">
+/// The type of digit stored in the list.
+/// <para/>
+/// This class cannot be extended outside of this assembly; therefore, the only possible values of this parameter are
+/// <see cref="byte"/>, <see cref="ushort"/>, <see cref="uint"/>, <see cref="ulong"/> and <see cref="BigInteger"/>.
+/// </typeparam>
+/// <param name="Digits">The list of digits to wrap.</param>
+/// <exception cref="StructArgumentDefaultException"><paramref name="Digits"/> was the default.</exception>
+public abstract record class GenericDigitList<TDigit>(
+    [NonDefaultableStruct] ImmutableArray<TDigit> Digits) : DigitList, IEnumerable<TDigit>
+{
+    /// <inheritdoc cref="DigitList.this[int]"/>
+    public new TDigit this[[NonNegative] int index] => Digits[index];
+
+    /// <inheritdoc/>
+    public sealed override int Count => Digits.Length;
+
+    /// <summary>
+    /// Gets an immutable array containing the digits the list is comprised of.
+    /// </summary>
+    [NonDefaultableStruct] public ImmutableArray<TDigit> Digits { get; }
+        = Throw.IfStructArgDefault(Digits, nameof(Digits));
+
+    private protected sealed override IEnumerator GetNonGenericEnumeratorInternal()
+    {
+        foreach (var d in Digits) yield return d;
+    }
+
+    /// <summary>
+    /// Returns an <see cref="IEnumerator{T}"/> that can be used to iterate through the digits of the list.
+    /// </summary>
+    /// <returns></returns>
+    public new ImmutableArray<TDigit>.Enumerator GetEnumerator() => Digits.GetEnumerator();
+
+    IEnumerator<TDigit> IEnumerable<TDigit>.GetEnumerator()
+    {
+        foreach (var d in Digits) yield return d;
+    }
+
+    /// <summary>
+    /// A builder for a <see cref="GenericDigitList{TDigit}"/>.
+    /// </summary>
+    public abstract new class Builder : DigitList.Builder
+    {
+        /// <inheritdoc/>
+        public sealed override int Count => _listBuilder.Count;
+
+        private protected readonly ImmutableArray<TDigit>.Builder _listBuilder
+            = ImmutableArray.CreateBuilder<TDigit>();
+
+        private protected sealed override DigitList ToListInternal() => ToGenericListInternal();
+
+        /// <inheritdoc cref="DigitList.Builder.ToListInternal"/>
+        private protected abstract GenericDigitList<TDigit> ToGenericListInternal();
     }
 }
 
@@ -322,13 +350,38 @@ public abstract record class DigitList : IDigitList
     /// <inheritdoc/>
     [NonNegative] public abstract int Count { get; }
 
-    /// <summary>
-    /// Prevents this class from being extended outside of this assembly.
-    /// </summary>
-    private protected DigitList() { }
-
     /// <inheritdoc/>
-    [return: NonNegative] public abstract BigInteger BigIntegerAt(int index);
+    [NonNegative] public BigInteger this[[NonNegative] int index] => IndexInternal(index);
+
+    /// <summary>
+    /// Allows <see cref="this[int]"/> to be implemented on a smaller numeric type in subclasses, while also ensuring
+    /// this class cannot be extended outside of this assembly.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    [return: NonNegative] private protected abstract BigInteger IndexInternal([NonNegative] int index);
+
+    IEnumerator IEnumerable.GetEnumerator() => GetNonGenericEnumeratorInternal();
+
+    /// <summary>
+    /// Allows <see cref="IEnumerable.GetEnumerator"/> to be implemented on a smaller generic numeric type, and also
+    /// prevents this class from being extended outside of this assembly.
+    /// </summary>
+    /// <returns></returns>
+    private protected abstract IEnumerator GetNonGenericEnumeratorInternal();
+
+    /// <summary>
+    /// Returns an enumerator that iterates through the digit list.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator<BigInteger> GetEnumerator() => GetEnumeratorInternal();
+
+    /// <summary>
+    /// Allows <see cref="GetEnumerator"/> to be implemented on a smaller generic numeric type, and also prevents this
+    /// class from being extended outside of this assembly.
+    /// </summary>
+    /// <returns></returns>
+    private protected abstract IEnumerator<BigInteger> GetEnumeratorInternal();
 
     /// <summary>
     /// A builder for a <see cref="DigitList"/>.
@@ -367,48 +420,49 @@ public abstract record class DigitList : IDigitList
     }
 }
 #endregion
+#endregion
 
 #region Interfaces
 /// <summary>
 /// An interface for types wrapping a list of <see cref="byte"/> digits.
 /// </summary>
-public interface IByteDigitList : IUShortDigitList
+public interface IByteDigitList : IUShortDigitList, IEnumerable<byte>
 {
-    /// <inheritdoc cref="IDigitList.BigIntegerAt(int)"/>
-    public byte ByteAt([NonNegative] int index);
+    /// <inheritdoc cref="IDigitList.this[int]"/>
+    public new byte this[[NonNegative] int index] { get; }
 }
 
 /// <summary>
 /// An interface for types wrapping a list of <see cref="ushort"/> digits.
 /// </summary>
-public interface IUShortDigitList : IUIntDigitList
+public interface IUShortDigitList : IUIntDigitList, IEnumerable<ushort>
 {
-    /// <inheritdoc cref="IDigitList.BigIntegerAt(int)"/>
-    public ushort UShortAt([NonNegative] int index);
+    /// <inheritdoc cref="IDigitList.this[int]"/>
+    public new ushort this[[NonNegative] int index] { get; }
 }
 
 /// <summary>
 /// An interface for types wrapping a list of <see cref="uint"/> digits.
 /// </summary>
-public interface IUIntDigitList : IULongDigitList
+public interface IUIntDigitList : IULongDigitList, IEnumerable<uint>
 {
-    /// <inheritdoc cref="IDigitList.BigIntegerAt(int)"/>
-    public uint UIntAt([NonNegative] int index);
+    /// <inheritdoc cref="IDigitList.this[int]"/>
+    public new uint this[[NonNegative] int index] { get; }
 }
 
 /// <summary>
 /// An interface for types wrapping a list of <see cref="ulong"/> digits.
 /// </summary>
-public interface IULongDigitList : IDigitList
+public interface IULongDigitList : IDigitList, IEnumerable<ulong>
 {
-    /// <inheritdoc cref="IDigitList.BigIntegerAt(int)"/>
-    public ulong ULongAt([NonNegative] int index);
+    /// <inheritdoc cref="IDigitList.this[int]"/>
+    public new ulong this[[NonNegative] int index] { get; }
 }
 
 /// <summary>
 /// An interface for types wrapping a list of digits.
 /// </summary>
-public interface IDigitList
+public interface IDigitList : IEnumerable<BigInteger>
 {
     /// <summary>
     /// Gets the number of digits in the list.
@@ -421,6 +475,6 @@ public interface IDigitList
     /// <param name="index"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> was out of range.</exception>
-    [return: NonNegative] public BigInteger BigIntegerAt([NonNegative] int index);
+    [NonNegative] public BigInteger this[[NonNegative] int index] { get; }
 }
 #endregion
