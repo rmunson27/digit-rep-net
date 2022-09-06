@@ -470,7 +470,7 @@ public abstract record class DigitList<TDigit>(
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected bool EqualsInternal<TList>(TList? other) where TList : DigitList<TDigit>
-        => other is not null && Digits == other.Digits;
+        => other is not null && Digits.SequenceEqual(other.Digits);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private protected int GetHashCodeInternal() => Digits.GetHashCode();
