@@ -19,7 +19,7 @@ public sealed record class UnsignedIntegralDigitRepresentation
     [GreaterThanOrEqualToInteger(2)] public BigInteger Base { get; }
 
     /// <summary>
-    /// Gets the digits of the representation.
+    /// Gets the digits of the representation, with no leading zeroes.
     /// </summary>
     public DigitList Digits { get; }
 
