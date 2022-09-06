@@ -329,6 +329,9 @@ public abstract record class DigitList<TDigit>(
         private protected readonly ImmutableArray<TDigit>.Builder _listBuilder
             = ImmutableArray.CreateBuilder<TDigit>();
 
+        /// <inheritdoc/>
+        public sealed override void Reverse() => _listBuilder.Reverse();
+
         private protected sealed override DigitList ToListInternal() => ToGenericListInternal();
 
         /// <inheritdoc cref="DigitList.Builder.ToListInternal"/>
@@ -404,6 +407,11 @@ public abstract record class DigitList : IDigitList
         /// <param name="Digit"></param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="Digit"/> was negative.</exception>
         public abstract void Add([NonNegative] BigInteger Digit);
+
+        /// <summary>
+        /// Reverses the order of digits in the builder.
+        /// </summary>
+        public abstract void Reverse();
 
         /// <summary>
         /// Gets the <see cref="DigitList"/> represented by the current state of the builder.
