@@ -646,7 +646,8 @@ public abstract record class DigitList : IDigitList
     #endregion
 
     #region Helpers
-    protected static string JoinImmutableArrayWithCommas<T>(ImmutableArray<T> arr)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected static string JoinImmutableArrayWithCommas<T>(ImmutableArray<T> arr)
     {
         var result = "";
         var isFirst = true;
