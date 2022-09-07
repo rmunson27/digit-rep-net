@@ -81,6 +81,18 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
         /// </exception>
+        public override void Add(uint Digit) => _listBuilder.Add((byte)Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
+        /// </exception>
+        public override void Add(ulong Digit) => _listBuilder.Add((byte)Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
+        /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
         {
             _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
@@ -153,6 +165,18 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
         /// </exception>
+        public override void Add(uint Digit) => _listBuilder.Add((ushort)Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
+        /// </exception>
+        public override void Add(ulong Digit) => _listBuilder.Add((ushort)Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
+        /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
         {
             _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
@@ -215,6 +239,15 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     {
         /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
         public ImmutableArray<uint>.Builder ListBuilder => _listBuilder;
+
+        /// <inheritdoc/>
+        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
+        /// </exception>
+        public override void Add(ulong Digit) => _listBuilder.Add((uint)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -282,6 +315,12 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
         /// Gets the builder for the list of digits.
         /// </summary>
         public ImmutableArray<ulong>.Builder ListBuilder => _listBuilder;
+
+        /// <inheritdoc/>
+        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ulong Digit) => _listBuilder.Add(Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -364,6 +403,12 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     /// </summary>
     public new sealed class Builder : DigitList<BigInteger>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ulong Digit) => _listBuilder.Add(Digit);
+
         /// <inheritdoc/>
         public override void Add([NonNegative] BigInteger Digit)
         {
@@ -546,6 +591,12 @@ public abstract record class DigitList : IDigitList
     /// <summary>
     /// A builder for a <see cref="DigitList"/>.
     /// </summary>
+    /// <remarks>
+    /// Instances of this class store digits that can be used to construct lists of digits of various sizes; however,
+    /// it should be noted that while methods for adding large integer types as digits (such as
+    /// <see cref="BigInteger"/>) are provided to make programming with the builders easier, these methods will throw
+    /// exceptions if there is an overflow.
+    /// </remarks>
     public abstract class Builder
     {
         /// <summary>
@@ -557,6 +608,18 @@ public abstract record class DigitList : IDigitList
         /// Prevents this class from being extended outside of this assembly.
         /// </summary>
         private protected Builder() { }
+
+        /// <summary>
+        /// Adds a digit to the list.
+        /// </summary>
+        /// <param name="Digit"></param>
+        public abstract void Add(uint Digit);
+
+        /// <summary>
+        /// Adds a digit to the list.
+        /// </summary>
+        /// <param name="Digit"></param>
+        public abstract void Add(ulong Digit);
 
         /// <summary>
         /// Adds a digit to the list.
