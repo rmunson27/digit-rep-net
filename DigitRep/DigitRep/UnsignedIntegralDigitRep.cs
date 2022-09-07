@@ -61,4 +61,15 @@ public sealed record class UnsignedIntegralDigitRep
         Base = this.Base;
         Digits = this.Digits;
     }
+
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString() => Digits.Count switch
+    {
+        0 => "0",
+        1 => $"{Digits[0]}",
+        _ => $"{Digits} (Base {Base})",
+    };
 }

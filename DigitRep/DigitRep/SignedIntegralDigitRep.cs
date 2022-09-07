@@ -100,4 +100,20 @@ public sealed record class SignedIntegralDigitRep
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(IsNegative, Base, Digits);
+
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return Digits.Count switch
+        {
+            0 => "0",
+            1 => $"{formatNegSign()}{Digits[0]}",
+            _ => $"{formatNegSign()}{Digits} (Base {Base})",
+        };
+
+        string formatNegSign() => IsNegative ? "-" : string.Empty;
+    }
 }
