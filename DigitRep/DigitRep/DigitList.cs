@@ -33,6 +33,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         => Digits[index];
     #endregion
 
+    #region Constructors
     /// <inheritdoc cref="ByteDigitList(IEnumerable{byte})"/>
     public ByteDigitList(params byte[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
 
@@ -44,6 +45,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     public ByteDigitList(IEnumerable<byte> Digits)
         : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
+    #endregion
 
     #region IEnumerable
     IEnumerator<ushort> IEnumerable<ushort>.GetEnumerator()
@@ -107,6 +109,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
+    #region Constructors
     /// <inheritdoc cref="UShortDigitList(IEnumerable{ushort})"/>
     public UShortDigitList(params ushort[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
@@ -119,6 +122,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     public UShortDigitList(IEnumerable<ushort> Digits)
         : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
+    #endregion
 
     #region IEnumerable
     IEnumerator<uint> IEnumerable<uint>.GetEnumerator()
@@ -178,6 +182,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
+    #region Constructors
     /// <inheritdoc cref="UIntDigitList(IEnumerable{uint})"/>
     public UIntDigitList(params uint[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
 
@@ -189,6 +194,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     public UIntDigitList(IEnumerable<uint> Digits)
         : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
+    #endregion
 
     #region IEnumerable
     IEnumerator<ulong> IEnumerable<ulong>.GetEnumerator()
@@ -236,12 +242,15 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
 public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits)
     : DigitList<ulong>(Digits), IULongDigitList
 {
+    #region Index
     /// <inheritdoc cref="DigitList.this[int]"/>
     public new ulong this[[NonNegative] int index] => Digits[index];
 
     [return: NonNegative]
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
+    #endregion
 
+    #region Constructors
     /// <inheritdoc cref="ULongDigitList(IEnumerable{ulong})"/>
     public ULongDigitList(params ulong[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
@@ -254,12 +263,15 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     public ULongDigitList(IEnumerable<ulong> Digits)
         : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
     { }
+    #endregion
 
+    #region IEnumerable
     /// <inheritdoc cref="DigitList.GetEnumerator"/>
     private protected override IEnumerator<BigInteger> GetEnumeratorInternal()
     {
         foreach (var ul in Digits) yield return ul;
     }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
@@ -292,9 +304,12 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
 /// </summary>
 public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 {
+    #region Index
     [return: NonNegative] private protected override BigInteger IndexInternal([NonNegative] int index)
         => Digits[index];
+    #endregion
 
+    #region Constructors
     /// <inheritdoc cref="BigIntegerDigitList(IEnumerable{BigInteger})"/>
     public BigIntegerDigitList(params BigInteger[] Digits)
         : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
@@ -332,7 +347,9 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
             }
         }
     }
+    #endregion
 
+    #region IEnumerable
     /// <inheritdoc cref="DigitList.GetEnumerator"/>
     public new ImmutableArray<BigInteger>.Enumerator GetEnumerator() => Digits.GetEnumerator();
 
@@ -340,6 +357,7 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     {
         foreach (var bi in Digits) yield return bi;
     }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
@@ -375,18 +393,23 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 public abstract record class DigitList<TDigit>(
     [NonDefaultableStruct] ImmutableArray<TDigit> Digits) : DigitList, IEnumerable<TDigit>
 {
-    /// <inheritdoc cref="DigitList.this[int]"/>
-    public new TDigit this[[NonNegative] int index] => Digits[index];
-
+    #region Properties
     /// <inheritdoc/>
     public sealed override int Count => Digits.Length;
+
+    #region Index
+    /// <inheritdoc cref="DigitList.this[int]"/>
+    public new TDigit this[[NonNegative] int index] => Digits[index];
+    #endregion
 
     /// <summary>
     /// Gets an immutable array containing the digits the list is comprised of.
     /// </summary>
     [NonDefaultableStruct] public ImmutableArray<TDigit> Digits { get; }
         = Throw.IfStructArgDefault(Digits, nameof(Digits));
+    #endregion
 
+    #region IEnumerable
     private protected sealed override IEnumerator GetNonGenericEnumeratorInternal()
     {
         foreach (var d in Digits) yield return d;
@@ -402,7 +425,9 @@ public abstract record class DigitList<TDigit>(
     {
         foreach (var d in Digits) yield return d;
     }
+    #endregion
 
+    #region Equality
     /// <summary>
     /// Determines if this object is equal to another object of the same type.
     /// </summary>
@@ -420,6 +445,7 @@ public abstract record class DigitList<TDigit>(
         foreach (var d in Digits) hash.Add(d);
         return hash.ToHashCode();
     }
+    #endregion
 
     /// <summary>
     /// Gets a string that represents the current instance.
@@ -462,6 +488,7 @@ public abstract record class DigitList : IDigitList
     /// <inheritdoc/>
     [NonNegative] public abstract int Count { get; }
 
+    #region Index
     /// <inheritdoc/>
     [NonNegative] public BigInteger this[[NonNegative] int index] => IndexInternal(index);
 
@@ -472,7 +499,9 @@ public abstract record class DigitList : IDigitList
     /// <param name="index"></param>
     /// <returns></returns>
     [return: NonNegative] private protected abstract BigInteger IndexInternal([NonNegative] int index);
+    #endregion
 
+    #region IEnumerable
     IEnumerator IEnumerable.GetEnumerator() => GetNonGenericEnumeratorInternal();
 
     /// <summary>
@@ -494,7 +523,9 @@ public abstract record class DigitList : IDigitList
     /// </summary>
     /// <returns></returns>
     private protected abstract IEnumerator<BigInteger> GetEnumeratorInternal();
+    #endregion
 
+    #region Helpers
     protected static string JoinImmutableArrayWithCommas<T>(ImmutableArray<T> arr)
     {
         var result = "";
@@ -510,6 +541,7 @@ public abstract record class DigitList : IDigitList
         }
         return result;
     }
+    #endregion
 
     /// <summary>
     /// A builder for a <see cref="DigitList"/>.
