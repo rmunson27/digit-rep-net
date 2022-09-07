@@ -68,19 +68,6 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     #endregion
 
     /// <summary>
-    /// Determines if the current instance is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(ByteDigitList? other) => EqualsInternal(other);
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => GetHashCodeInternal();
-
-    /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<byte>.Builder
@@ -151,19 +138,6 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     #endregion
 
     /// <summary>
-    /// Determines if the current instance is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(UShortDigitList? other) => EqualsInternal(other);
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => GetHashCodeInternal();
-
-    /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<ushort>.Builder
@@ -229,19 +203,6 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     #endregion
 
     /// <summary>
-    /// Determines if the current instance is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(UIntDigitList? other) => EqualsInternal(other);
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => GetHashCodeInternal();
-
-    /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<uint>.Builder
@@ -299,19 +260,6 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     {
         foreach (var ul in Digits) yield return ul;
     }
-
-    /// <summary>
-    /// Determines if the current instance is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(ULongDigitList? other) => EqualsInternal(other);
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => GetHashCodeInternal();
 
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
@@ -394,19 +342,6 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     }
 
     /// <summary>
-    /// Determines if the current instance is equal to another object of the same type.
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
-    public bool Equals(BigIntegerDigitList? other) => EqualsInternal(other);
-
-    /// <summary>
-    /// Gets a hash code for the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public override int GetHashCode() => GetHashCodeInternal();
-
-    /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<BigInteger>.Builder
@@ -468,12 +403,23 @@ public abstract record class DigitList<TDigit>(
         foreach (var d in Digits) yield return d;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private protected bool EqualsInternal<TList>(TList? other) where TList : DigitList<TDigit>
-        => other is not null && Digits.SequenceEqual(other.Digits);
+    /// <summary>
+    /// Determines if this object is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public virtual bool Equals(DigitList<TDigit>? other) => other is not null && Digits.SequenceEqual(other.Digits);
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private protected int GetHashCodeInternal() => Digits.GetHashCode();
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        foreach (var d in Digits) hash.Add(d);
+        return hash.ToHashCode();
+    }
 
     /// <summary>
     /// Gets a string that represents the current instance.
