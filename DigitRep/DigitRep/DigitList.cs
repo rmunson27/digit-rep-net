@@ -76,6 +76,22 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     public new ByteDigitList WithoutLeadingZeroes() => new(GetDigitsWithoutLeadingZeroes());
     #endregion
 
+    #region Equivalence
+    /// <inheritdoc/>
+    public override bool IsEquivalentTo(DigitList other)
+#pragma warning disable CS8509 // This should handle everything
+        => other switch
+#pragma warning restore CS8509
+        {
+            null => throw new ArgumentNullException(nameof(other)),
+            BigIntegerDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (BigInteger)n)),
+            ULongDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (ulong)n)),
+            UIntDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (uint)n)),
+            UShortDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (ushort)n)),
+            ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits),
+        };
+    #endregion
+
     /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
     /// </summary>
@@ -167,6 +183,22 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     public new UShortDigitList WithoutLeadingZeroes() => new(GetDigitsWithoutLeadingZeroes());
     #endregion
 
+    #region Equivalence
+    /// <inheritdoc/>
+    public override bool IsEquivalentTo(DigitList other)
+#pragma warning disable CS8509 // This should handle everything
+        => other switch
+#pragma warning restore CS8509
+        {
+            null => throw new ArgumentNullException(nameof(other)),
+            BigIntegerDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (BigInteger)n)),
+            ULongDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (ulong)n)),
+            UIntDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (uint)n)),
+            UShortDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits),
+            ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ushort)n)),
+        };
+    #endregion
+
     /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
     /// </summary>
@@ -253,6 +285,22 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     public new UIntDigitList WithoutLeadingZeroes() => new(GetDigitsWithoutLeadingZeroes());
     #endregion
 
+    #region Equivalence
+    /// <inheritdoc/>
+    public override bool IsEquivalentTo(DigitList other)
+#pragma warning disable CS8509 // This should handle everything
+        => other switch
+#pragma warning restore CS8509
+        {
+            null => throw new ArgumentNullException(nameof(other)),
+            BigIntegerDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (BigInteger)n)),
+            ULongDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (ulong)n)),
+            UIntDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (uint)n)),
+            UShortDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (uint)n)),
+            ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (uint)n)),
+        };
+    #endregion
+
     /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
     /// </summary>
@@ -332,6 +380,22 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
 
     /// <inheritdoc cref="DigitList.WithoutLeadingZeroes"/>
     public new ULongDigitList WithoutLeadingZeroes() => new(GetDigitsWithoutLeadingZeroes());
+    #endregion
+
+    #region Equivalence
+    /// <inheritdoc/>
+    public override bool IsEquivalentTo(DigitList other)
+#pragma warning disable CS8509 // This should handle everything
+        => other switch
+#pragma warning restore CS8509
+        {
+            null => throw new ArgumentNullException(nameof(other)),
+            BigIntegerDigitList(var otherDigits) => otherDigits.SequenceEqual(Digits.Select(n => (BigInteger)n)),
+            ULongDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits),
+            UIntDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ulong)n)),
+            UShortDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ulong)n)),
+            ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ulong)n)),
+        };
     #endregion
 
     /// <summary>
@@ -431,6 +495,22 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 
     /// <inheritdoc cref="DigitList.WithoutLeadingZeroes"/>
     public new BigIntegerDigitList WithoutLeadingZeroes() => new(GetDigitsWithoutLeadingZeroes());
+    #endregion
+
+    #region Equivalence
+    /// <inheritdoc/>
+    public override bool IsEquivalentTo(DigitList other)
+#pragma warning disable CS8509 // This should handle everything
+        => other switch
+#pragma warning restore CS8509
+        {
+            null => throw new ArgumentNullException(nameof(other)),
+            BigIntegerDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits),
+            ULongDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (BigInteger)n)),
+            UIntDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (BigInteger)n)),
+            UShortDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (BigInteger)n)),
+            ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (BigInteger)n)),
+        };
     #endregion
 
     /// <summary>
@@ -534,7 +614,6 @@ public abstract record class DigitList<TDigit>(
     /// </summary>
     /// <returns></returns>
     public sealed override string ToString() => $"{{ {JoinImmutableArrayWithCommas(Digits)} }}";
-
 
     #region Leading Zero Removal
     private protected sealed override DigitList WithoutLeadingZeroesInternal() => WithoutLeadingZeroes();
@@ -643,6 +722,17 @@ public abstract record class DigitList : IDigitList
     /// </summary>
     /// <returns></returns>
     private protected abstract DigitList WithoutLeadingZeroesInternal();
+    #endregion
+
+    #region Equivalence
+    /// <summary>
+    /// Determines if this list of digits is equivalent to the other list, ignoring the size of the representation of
+    /// the digits themselves.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"><paramref name="other"/> was <see langword="null"/>.</exception>
+    public abstract bool IsEquivalentTo(DigitList other);
     #endregion
 
     #region Helpers
