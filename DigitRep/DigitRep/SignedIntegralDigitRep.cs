@@ -19,6 +19,11 @@ public sealed record class SignedIntegralDigitRep
     [GreaterThanOrEqualToInteger(2)] public BigInteger Base { get; }
 
     /// <summary>
+    /// Gets the sign of the value represented by this instance.
+    /// </summary>
+    public int Sign => IsNegative ? -1 : (Digits.Count == 0 ? 0 : 1);
+
+    /// <summary>
     /// Gets whether or not the represented value is negative.
     /// </summary>
     public bool IsNegative { get; }
@@ -79,4 +84,20 @@ public sealed record class SignedIntegralDigitRep
         Base = this.Base;
         Digits = this.Digits;
     }
+
+    /// <summary>
+    /// Determines if this instance is equal to another object of the same type.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool Equals(SignedIntegralDigitRep? other) => other is not null
+                                                            && IsNegative == other.IsNegative
+                                                            && Base == other.Base
+                                                            && Digits == other.Digits;
+
+    /// <summary>
+    /// Gets a hash code for the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode() => HashCode.Combine(IsNegative, Base, Digits);
 }
