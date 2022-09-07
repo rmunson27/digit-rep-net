@@ -6,7 +6,7 @@
 		<RootNamespace>Rem.Core.Math.Digits</RootNamespace>
 		<Version>1.0</Version>
 		<Description>
-			A lightweight library that can represent a numerical value in digits of any base.
+			A lightweight library that can be used to represent a numerical value in digits of any base.
 		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>Richard E. Munson</Authors>
