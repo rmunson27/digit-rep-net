@@ -44,6 +44,30 @@ public sealed record class SignedIntegralDigitRep
     }
 
     /// <summary>
+    /// Creates a new <see cref="SignedIntegralDigitRep"/> with the negative sign, base and digits passed in.
+    /// </summary>
+    /// <remarks>
+    /// Leading zeroes will be stripped off of the digit list before creation.
+    /// <para/>
+    /// If the digit list is equal to zero, the <see cref="IsNegative"/> property of the return value will be
+    /// <see langword="false"/> even if <paramref name="IsNegative"/> is set to <see langword="true"/>.
+    /// </remarks>
+    /// <param name="IsNegative"></param>
+    /// <param name="Base"></param>
+    /// <param name="Digits"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Base"/> was less than 2.</exception>
+    public static SignedIntegralDigitRep Create(
+        bool IsNegative, [GreaterThanOrEqualToInteger(2)] BigInteger Base, DigitList Digits)
+    {
+        Throw.IfArgLessThan(2, Base, nameof(Base));
+        Digits = Throw.IfArgNull(Digits, nameof(Digits)).WithoutLeadingZeroes();
+        if (Digits.Count == 0) IsNegative = false; // Is zero, therefore is not a negative value
+        return new(IsNegative, Base, Digits);
+    }
+
+    /// <summary>
     /// Deconstructs the current instance.
     /// </summary>
     /// <param name="Base"></param>

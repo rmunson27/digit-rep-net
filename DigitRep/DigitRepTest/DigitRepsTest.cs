@@ -15,10 +15,30 @@ using static DigitReps;
 [TestClass]
 public class DigitRepsTest
 {
+    private const string UnsignedCategoryName = "UnsignedIntegral";
+    private const string SignedCategoryName = "SignedIntegral";
+
+    /// <summary>
+    /// Tests the <see cref="UnsignedIntegralDigitRep.Create(BigInteger, DigitList)"/> method.
+    /// </summary>
+    [TestMethod, TestCategory(UnsignedCategoryName)]
+    public void TestUnsignedIntegralCreate()
+    {
+        // Should strip off all leading zeroes
+        Assert.That.DigitRepEquals(
+            12, new ByteDigitList(1, 0),
+            UnsignedIntegralDigitRep.Create(12, new ByteDigitList(0, 0, 0, 1, 0)));
+
+        // Should be unchanged
+        Assert.That.DigitRepEquals(
+            12, new ByteDigitList(1, 2, 3),
+            UnsignedIntegralDigitRep.Create(12, new ByteDigitList(1, 2, 3)));
+    }
+
     /// <summary>
     /// Tests the methods for generating digit representations of unsigned integral values.
     /// </summary>
-    [TestMethod, TestCategory("UnsignedIntegral")]
+    [TestMethod, TestCategory(UnsignedCategoryName)]
     public void TestUnsignedIntegralRepresentations()
     {
         // Zero tests
@@ -32,9 +52,31 @@ public class DigitRepsTest
     }
 
     /// <summary>
+    /// Tests the <see cref="SignedIntegralDigitRep.Create(bool, BigInteger, DigitList)"/> method.
+    /// </summary>
+    [TestMethod, TestCategory(SignedCategoryName)]
+    public void TestSignedIntegralCreate()
+    {
+        // Should strip off all leading zeroes
+        Assert.That.DigitRepEquals(
+            true, 12, new ByteDigitList(1, 0),
+            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(0, 0, 0, 1, 0)));
+
+        // Should set the `IsNegative` flag to `false` since the representation is equivalent to zero
+        Assert.That.DigitRepEquals(
+            false, 12, new ByteDigitList(),
+            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(0, 0)));
+
+        // Should be unchanged
+        Assert.That.DigitRepEquals(
+            true, 12, new ByteDigitList(1, 2, 3),
+            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(1, 2, 3)));
+    }
+
+    /// <summary>
     /// Tests the methods for generating digit representations of signed integral values.
     /// </summary>
-    [TestMethod, TestCategory("SignedIntegral")]
+    [TestMethod, TestCategory(SignedCategoryName)]
     public void TestSignedIntegralRepresentation()
     {
         // Zero tests
