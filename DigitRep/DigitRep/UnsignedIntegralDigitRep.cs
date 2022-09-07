@@ -11,7 +11,7 @@ namespace Rem.Core.Math.Digits;
 /// <summary>
 /// A representation of an unsigned integral value in a given base.
 /// </summary>
-public sealed record class UnsignedIntegralDigitRepresentation
+public sealed record class UnsignedIntegralDigitRep
 {
     /// <summary>
     /// Gets the base of the representation.
@@ -24,10 +24,10 @@ public sealed record class UnsignedIntegralDigitRepresentation
     public DigitList Digits { get; }
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="UnsignedIntegralDigitRepresentation"/> class with the digits of
+    /// Constructs a new instance of the <see cref="UnsignedIntegralDigitRep"/> class with the digits of
     /// the representation.
     /// </summary>
-    internal UnsignedIntegralDigitRepresentation(BigInteger Base, DigitList Digits)
+    internal UnsignedIntegralDigitRep(BigInteger Base, DigitList Digits)
     {
         this.Base = Base;
         this.Digits = Digits;
