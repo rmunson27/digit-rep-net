@@ -613,7 +613,7 @@ public abstract record class DigitList<TDigit>(
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public sealed override string ToString() => $"{{ {JoinImmutableArrayWithCommas(Digits)} }}";
+    public sealed override string ToString() => $"{{ {JoinImmutableArray(Digits)} }}";
 
     #region Leading Zero Removal
     private protected sealed override DigitList WithoutLeadingZeroesInternal() => WithoutLeadingZeroes();
@@ -737,7 +737,7 @@ public abstract record class DigitList : IDigitList
 
     #region Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private protected static string JoinImmutableArrayWithCommas<T>(ImmutableArray<T> arr)
+    private protected static string JoinImmutableArray<T>(ImmutableArray<T> arr)
     {
         var result = "";
         var isFirst = true;
@@ -748,7 +748,7 @@ public abstract record class DigitList : IDigitList
                 result += item!.ToString();
                 isFirst = false;
             }
-            else result += $", {item}";
+            else result += $" {item}";
         }
         return result;
     }
