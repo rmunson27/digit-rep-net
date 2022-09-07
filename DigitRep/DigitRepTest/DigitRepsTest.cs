@@ -21,6 +21,10 @@ public class DigitRepsTest
     [TestMethod, TestCategory("UnsignedIntegral")]
     public void TestUnsignedIntegralRepresentations()
     {
+        // Zero tests
+        Assert.That.DigitRepEquals(12, new ByteDigitList(), InBase(0u, 12));
+        Assert.That.DigitRepEquals(12, new ByteDigitList(), InBase(0ul, 12));
+
         Assert.That.DigitRepEquals(10, new ByteDigitList(3, 4, 5, 6, 7, 0, 1), InBase(3456701u, 10));
         Assert.That.DigitRepEquals(10, new ByteDigitList(3, 4, 5, 6, 7, 0, 1), InBase(3456701ul, 10));
         Assert.That.DigitRepEquals(30000, new UShortDigitList(1, 4, 23), InBase(900120023u, 30000));
@@ -33,6 +37,10 @@ public class DigitRepsTest
     [TestMethod, TestCategory("SignedIntegral")]
     public void TestSignedIntegralRepresentation()
     {
+        // Zero tests
+        Assert.That.DigitRepEquals(false, 12, new ByteDigitList(), InBase(0, 12));
+        Assert.That.DigitRepEquals(false, 12, new ByteDigitList(), InBase(0L, 12));
+
         Assert.That.DigitRepEquals(false, 10, new ByteDigitList(4, 2, 1, 3, 0, 5), InBase(421305, 10));
         Assert.That.DigitRepEquals(false, 10, new ByteDigitList(4, 2, 1, 3, 0, 5), InBase(421305L, 10));
         Assert.That.DigitRepEquals(
