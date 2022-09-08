@@ -97,32 +97,30 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     /// </summary>
     public new sealed class Builder : DigitList<byte>.Builder
     {
-        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
-        public ImmutableArray<byte>.Builder ListBuilder => _listBuilder;
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
         /// </exception>
-        public override void Add(uint Digit) => _listBuilder.Add((byte)Digit);
+        public override void Add(uint Digit) => ListBuilder.Add((byte)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
         /// </exception>
-        public override void Add(ulong Digit) => _listBuilder.Add((byte)Digit);
+        public override void Add(ulong Digit) => ListBuilder.Add((byte)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-            => _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
+            => ListBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<byte> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
-        public new ByteDigitList ToList() => new(_listBuilder.ToImmutable());
+        public new ByteDigitList ToList() => new(ListBuilder.ToImmutable());
     }
 }
 
@@ -202,32 +200,30 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     /// </summary>
     public new sealed class Builder : DigitList<ushort>.Builder
     {
-        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
-        public ImmutableArray<ushort>.Builder ListBuilder => _listBuilder;
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
         /// </exception>
-        public override void Add(uint Digit) => _listBuilder.Add((ushort)Digit);
+        public override void Add(uint Digit) => ListBuilder.Add((ushort)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
         /// </exception>
-        public override void Add(ulong Digit) => _listBuilder.Add((ushort)Digit);
+        public override void Add(ulong Digit) => ListBuilder.Add((ushort)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-            => _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
+            => ListBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<ushort> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
-        public new UShortDigitList ToList() => new(_listBuilder.ToImmutable());
+        public new UShortDigitList ToList() => new(ListBuilder.ToImmutable());
     }
 }
 
@@ -302,29 +298,27 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     /// </summary>
     public new sealed class Builder : DigitList<uint>.Builder
     {
-        /// <inheritdoc cref="ULongDigitList.Builder.ListBuilder"/>
-        public ImmutableArray<uint>.Builder ListBuilder => _listBuilder;
 
         /// <inheritdoc/>
-        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+        public override void Add(uint Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
         /// </exception>
-        public override void Add(ulong Digit) => _listBuilder.Add((uint)Digit);
+        public override void Add(ulong Digit) => ListBuilder.Add((uint)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-            => _listBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
+            => ListBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<uint> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
-        public new UIntDigitList ToList() => new(_listBuilder.ToImmutable());
+        public new UIntDigitList ToList() => new(ListBuilder.ToImmutable());
     }
 }
 
@@ -397,28 +391,24 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     /// </summary>
     public new sealed class Builder : DigitList<ulong>.Builder
     {
-        /// <summary>
-        /// Gets the builder for the list of digits.
-        /// </summary>
-        public ImmutableArray<ulong>.Builder ListBuilder => _listBuilder;
 
         /// <inheritdoc/>
-        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+        public override void Add(uint Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
-        public override void Add(ulong Digit) => _listBuilder.Add(Digit);
+        public override void Add(ulong Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
         /// <paramref name="Digit"/> was too large for a <see cref="ulong"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-            => _listBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
+            => ListBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<ulong> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
-        public new ULongDigitList ToList() => new(_listBuilder.ToImmutable());
+        public new ULongDigitList ToList() => new(ListBuilder.ToImmutable());
     }
 }
 
@@ -511,19 +501,19 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     public new sealed class Builder : DigitList<BigInteger>.Builder
     {
         /// <inheritdoc/>
-        public override void Add(uint Digit) => _listBuilder.Add(Digit);
+        public override void Add(uint Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
-        public override void Add(ulong Digit) => _listBuilder.Add(Digit);
+        public override void Add(ulong Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         public override void Add([NonNegative] BigInteger Digit)
-            => _listBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
+            => ListBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<BigInteger> ToGenericListInternal() => ToList();
 
         /// <inheritdoc cref="DigitList.Builder.ToList"/>
-        public new BigIntegerDigitList ToList() => new(_listBuilder.ToImmutable());
+        public new BigIntegerDigitList ToList() => new(ListBuilder.ToImmutable());
     }
 }
 #endregion
@@ -633,13 +623,15 @@ public abstract record class DigitList<TDigit>(
     public abstract new class Builder : DigitList.Builder
     {
         /// <inheritdoc/>
-        public sealed override int Count => _listBuilder.Count;
+        public sealed override int Count => ListBuilder.Count;
 
-        private protected readonly ImmutableArray<TDigit>.Builder _listBuilder
-            = ImmutableArray.CreateBuilder<TDigit>();
+        /// <summary>
+        /// Gets the <see cref="ImmutableArray{T}.Builder"/> instance that will be used to create the digit list.
+        /// </summary>
+        public ImmutableArray<TDigit>.Builder ListBuilder { get; } = ImmutableArray.CreateBuilder<TDigit>();
 
         /// <inheritdoc/>
-        public sealed override void Reverse() => _listBuilder.Reverse();
+        public sealed override void Reverse() => ListBuilder.Reverse();
 
         private protected sealed override DigitList ToListInternal() => ToGenericListInternal();
 
