@@ -97,6 +97,14 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
     /// </summary>
     public new sealed class Builder : DigitList<byte>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(byte Digit) => ListBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        /// <exception cref="OverflowException">
+        /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
+        /// </exception>
+        public override void Add(ushort Digit) => ListBuilder.Add((byte)Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -200,6 +208,11 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     /// </summary>
     public new sealed class Builder : DigitList<ushort>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(byte Digit) => ListBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ushort Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         /// <exception cref="OverflowException">
@@ -298,6 +311,11 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     /// </summary>
     public new sealed class Builder : DigitList<uint>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(byte Digit) => ListBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ushort Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         public override void Add(uint Digit) => ListBuilder.Add(Digit);
@@ -391,6 +409,11 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     /// </summary>
     public new sealed class Builder : DigitList<ulong>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(byte Digit) => ListBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ushort Digit) => ListBuilder.Add(Digit);
 
         /// <inheritdoc/>
         public override void Add(uint Digit) => ListBuilder.Add(Digit);
@@ -500,6 +523,12 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     /// </summary>
     public new sealed class Builder : DigitList<BigInteger>.Builder
     {
+        /// <inheritdoc/>
+        public override void Add(byte Digit) => ListBuilder.Add(Digit);
+
+        /// <inheritdoc/>
+        public override void Add(ushort Digit) => ListBuilder.Add(Digit);
+
         /// <inheritdoc/>
         public override void Add(uint Digit) => ListBuilder.Add(Digit);
 
@@ -756,6 +785,12 @@ public abstract record class DigitList : IDigitList
         /// Prevents this class from being extended outside of this assembly.
         /// </summary>
         private protected Builder() { }
+
+        /// <inheritdoc cref="Add(ulong)"/>
+        public abstract void Add(byte Digit);
+
+        /// <inheritdoc cref="Add(ulong)"/>
+        public abstract void Add(ushort Digit);
 
         /// <inheritdoc cref="Add(ulong)"/>
         public abstract void Add(uint Digit);
