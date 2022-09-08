@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup Label="Identity">
-		<Product>Rem.Core.Math.Digits</Product>
-		<PackageId>Rem.Core.Math.Digits</PackageId>
-		<RootNamespace>Rem.Core.Math.Digits</RootNamespace>
+		<Product>Rem.Core.Numerics.Digits</Product>
+		<PackageId>Rem.Core.Numerics.Digits</PackageId>
+		<RootNamespace>Rem.Core.Numerics.Digits</RootNamespace>
 		<Version>1.0</Version>
 		<Description>
-			A lightweight library that can be used to represent a numerical value in digits of any base.
+			A lightweight utility that can be used to represent a numerical value in digits of any base.
 		</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>Richard E. Munson</Authors>
 		<Copyright>Richard E. Munson, 2022</Copyright>
-		<PackageTags>math;numerics;digits</PackageTags>
+		<PackageTags>math;utilities;numerics;digits</PackageTags>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Outputs">
