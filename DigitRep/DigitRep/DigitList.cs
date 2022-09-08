@@ -92,11 +92,23 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         };
     #endregion
 
+    private protected override DigitList<byte>.Builder ToGenericBuilderInternal() => ToBuilder();
+
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new Builder ToBuilder() => new(Digits.ToBuilder());
+
     /// <summary>
     /// A builder for a <see cref="ByteDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<byte>.Builder
     {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Builder"/> class.
+        /// </summary>
+        public Builder() : base() { }
+
+        internal Builder(ImmutableArray<byte>.Builder ListBuilder) : base(ListBuilder) { }
+
         /// <inheritdoc/>
         public override void Add(byte Digit) => ListBuilder.Add(Digit);
 
@@ -203,11 +215,23 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
         };
     #endregion
 
+    private protected override DigitList<ushort>.Builder ToGenericBuilderInternal() => ToBuilder();
+
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new Builder ToBuilder() => new(Digits.ToBuilder());
+
     /// <summary>
     /// A builder for a <see cref="UShortDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<ushort>.Builder
     {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Builder"/> class.
+        /// </summary>
+        public Builder() : base() { }
+
+        internal Builder(ImmutableArray<ushort>.Builder ListBuilder) : base(ListBuilder) { }
+
         /// <inheritdoc/>
         public override void Add(byte Digit) => ListBuilder.Add(Digit);
 
@@ -306,11 +330,23 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
         };
     #endregion
 
+    private protected override DigitList<uint>.Builder ToGenericBuilderInternal() => ToBuilder();
+
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new Builder ToBuilder() => new(Digits.ToBuilder());
+
     /// <summary>
     /// A builder for a <see cref="UIntDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<uint>.Builder
     {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Builder"/> class.
+        /// </summary>
+        public Builder() : base() { }
+
+        internal Builder(ImmutableArray<uint>.Builder ListBuilder) : base(ListBuilder) { }
+
         /// <inheritdoc/>
         public override void Add(byte Digit) => ListBuilder.Add(Digit);
 
@@ -404,11 +440,23 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
         };
     #endregion
 
+    private protected override DigitList<ulong>.Builder ToGenericBuilderInternal() => ToBuilder();
+
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new Builder ToBuilder() => new(Digits.ToBuilder());
+
     /// <summary>
     /// A builder for a <see cref="ULongDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<ulong>.Builder
     {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Builder"/> class.
+        /// </summary>
+        public Builder() : base() { }
+
+        internal Builder(ImmutableArray<ulong>.Builder ListBuilder) : base(ListBuilder) { }
+
         /// <inheritdoc/>
         public override void Add(byte Digit) => ListBuilder.Add(Digit);
 
@@ -518,11 +566,23 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
         };
     #endregion
 
+    private protected override DigitList<BigInteger>.Builder ToGenericBuilderInternal() => ToBuilder();
+
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new Builder ToBuilder() => new(Digits.ToBuilder());
+
     /// <summary>
     /// A builder for a <see cref="BigIntegerDigitList"/>.
     /// </summary>
     public new sealed class Builder : DigitList<BigInteger>.Builder
     {
+        /// <summary>
+        /// Constructs a new instance of the <see cref="Builder"/> class.
+        /// </summary>
+        public Builder() : base() { }
+
+        internal Builder(ImmutableArray<BigInteger>.Builder ListBuilder) : base(ListBuilder) { }
+
         /// <inheritdoc/>
         public override void Add(byte Digit) => ListBuilder.Add(Digit);
 
@@ -624,6 +684,16 @@ public abstract record class DigitList<TDigit>(
     /// <returns></returns>
     public sealed override string ToString() => $"{{ {JoinImmutableArray(Digits)} }}";
 
+    #region ToBuilder
+    /// <inheritdoc cref="DigitList.ToBuilder"/>
+    public new DigitList<TDigit>.Builder ToBuilder() => ToGenericBuilderInternal();
+
+    private protected sealed override DigitList.Builder ToBuilderInternal() => ToGenericBuilderInternal();
+
+    /// <inheritdoc cref="DigitList.ToBuilderInternal"/>
+    private protected abstract DigitList<TDigit>.Builder ToGenericBuilderInternal();
+    #endregion
+
     #region Leading Zero Removal
     private protected sealed override DigitList WithoutLeadingZeroesInternal() => WithoutLeadingZeroes();
 
@@ -657,7 +727,11 @@ public abstract record class DigitList<TDigit>(
         /// <summary>
         /// Gets the <see cref="ImmutableArray{T}.Builder"/> instance that will be used to create the digit list.
         /// </summary>
-        public ImmutableArray<TDigit>.Builder ListBuilder { get; } = ImmutableArray.CreateBuilder<TDigit>();
+        public ImmutableArray<TDigit>.Builder ListBuilder { get; }
+
+        private protected Builder() : this(ImmutableArray.CreateBuilder<TDigit>()) { }
+
+        private protected Builder(ImmutableArray<TDigit>.Builder ListBuilder) { this.ListBuilder = ListBuilder; }
 
         /// <inheritdoc/>
         public sealed override void Reverse() => ListBuilder.Reverse();
@@ -748,6 +822,19 @@ public abstract record class DigitList : IDigitList
     /// <exception cref="ArgumentNullException"><paramref name="other"/> was <see langword="null"/>.</exception>
     public abstract bool IsEquivalentTo(DigitList other);
     #endregion
+
+    /// <summary>
+    /// Gets a builder object that can be used to get a modified copy of this list.
+    /// </summary>
+    /// <returns></returns>
+    public Builder ToBuilder() => ToBuilderInternal();
+
+    /// <summary>
+    /// Allows the <see cref="ToBuilder"/> return type to be further specified in subclasses, while also preventing
+    /// this class from being extended outside of this assembly.
+    /// </summary>
+    /// <returns></returns>
+    private protected abstract Builder ToBuilderInternal();
 
     #region Helpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
