@@ -117,9 +117,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         /// <paramref name="Digit"/> was too large for a <see cref="byte"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-        {
-            _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
-        }
+            => _listBuilder.Add((byte)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<byte> ToGenericListInternal() => ToList();
 
@@ -224,9 +222,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
         /// <paramref name="Digit"/> was too large for a <see cref="ushort"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-        {
-            _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
-        }
+            => _listBuilder.Add((ushort)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<ushort> ToGenericListInternal() => ToList();
 
@@ -323,9 +319,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
         /// <paramref name="Digit"/> was too large for a <see cref="uint"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-        {
-            _listBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
-        }
+            => _listBuilder.Add((uint)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<uint> ToGenericListInternal() => ToList();
 
@@ -419,9 +413,7 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
         /// <paramref name="Digit"/> was too large for a <see cref="ulong"/>.
         /// </exception>
         public override void Add([NonNegative] BigInteger Digit)
-        {
-            _listBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
-        }
+            => _listBuilder.Add((ulong)Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<ulong> ToGenericListInternal() => ToList();
 
@@ -526,9 +518,7 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 
         /// <inheritdoc/>
         public override void Add([NonNegative] BigInteger Digit)
-        {
-            _listBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
-        }
+            => _listBuilder.Add(Throw.IfArgNegative(Digit, nameof(Digit)));
 
         private protected override DigitList<BigInteger> ToGenericListInternal() => ToList();
 
