@@ -662,6 +662,9 @@ public abstract record class DigitList<TDigit>(
         /// <inheritdoc/>
         public sealed override void Reverse() => ListBuilder.Reverse();
 
+        /// <inheritdoc/>
+        public sealed override void Clear() => ListBuilder.Clear();
+
         private protected sealed override DigitList ToListInternal() => ToGenericListInternal();
 
         /// <inheritdoc cref="DigitList.Builder.ToListInternal"/>
@@ -809,6 +812,11 @@ public abstract record class DigitList : IDigitList
         /// Reverses the order of digits in the builder.
         /// </summary>
         public abstract void Reverse();
+
+        /// <summary>
+        /// Removes all digits from the builder.
+        /// </summary>
+        public abstract void Clear();
 
         /// <summary>
         /// Gets the <see cref="DigitList"/> represented by the current state of the builder.
