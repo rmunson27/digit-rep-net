@@ -765,10 +765,7 @@ public abstract record class DigitList : IDigitList
         /// </summary>
         private protected Builder() { }
 
-        /// <summary>
-        /// Adds a digit to the list.
-        /// </summary>
-        /// <param name="Digit"></param>
+        /// <inheritdoc cref="Add(ulong)"/>
         public abstract void Add(uint Digit);
 
         /// <summary>
@@ -777,10 +774,7 @@ public abstract record class DigitList : IDigitList
         /// <param name="Digit"></param>
         public abstract void Add(ulong Digit);
 
-        /// <summary>
-        /// Adds a digit to the list.
-        /// </summary>
-        /// <param name="Digit"></param>
+        /// <inheritdoc cref="Add(ulong)"/>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="Digit"/> was negative.</exception>
         public abstract void Add([NonNegative] BigInteger Digit);
 
