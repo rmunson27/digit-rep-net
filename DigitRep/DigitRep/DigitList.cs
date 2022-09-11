@@ -622,7 +622,7 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 public abstract record class DigitList<TDigit>(
     [NonDefaultableStruct] ImmutableArray<TDigit> Digits)
     : DigitList, IEnumerable<TDigit>
-    where TDigit : struct, IEquatable<TDigit>
+    where TDigit : struct, IEquatable<TDigit>, IFormattable
 {
     #region Properties
     /// <inheritdoc/>
@@ -678,11 +678,10 @@ public abstract record class DigitList<TDigit>(
     }
     #endregion
 
-    /// <summary>
-    /// Gets a string that represents the current instance.
-    /// </summary>
-    /// <returns></returns>
-    public sealed override string ToString() => $"{{ {JoinImmutableArray(Digits)} }}";
+    /// <inheritdoc/>
+    public sealed override string FormatAsList(
+        string? separator = null, string? digitFormat = "D", IFormatProvider? digitFormatProvider = null)
+        => string.Join(separator, Digits.Select(d => d.ToString(digitFormat, digitFormatProvider)));
 
     #region ToBuilder
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -823,6 +822,7 @@ public abstract record class DigitList : IDigitList
     public abstract bool IsEquivalentTo(DigitList other);
     #endregion
 
+    #region Builder
     /// <summary>
     /// Gets a builder object that can be used to get a modified copy of this list.
     /// </summary>
@@ -835,24 +835,68 @@ public abstract record class DigitList : IDigitList
     /// </summary>
     /// <returns></returns>
     private protected abstract Builder ToBuilderInternal();
+    #endregion
 
-    #region Helpers
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private protected static string JoinImmutableArray<T>(ImmutableArray<T> arr)
-    {
-        var result = "";
-        var isFirst = true;
-        foreach (var item in arr)
-        {
-            if (isFirst)
-            {
-                result += item!.ToString();
-                isFirst = false;
-            }
-            else result += $" {item}";
-        }
-        return result;
-    }
+    #region ToString
+    /// <summary>
+    /// Gets a string that represents the current instance.
+    /// </summary>
+    /// <returns></returns>
+    public sealed override string ToString() => ToString(digitFormatProvider: null);
+
+    /// <summary>
+    /// Gets a string that represents the current instance with the digits formatted using the specified digit format
+    /// and separated using the specified separator string.
+    /// </summary>
+    /// <param name="separator">
+    /// A separator to use to separate the digits when formatting.
+    /// -or-
+    /// a <see langword="null"/> reference to not include separators.
+    /// </param>
+    /// <param name="digitFormat">
+    /// The format to use to format the digits.
+    /// -or-
+    /// A <see langword="null"/> reference to use the default format for the type of digits being represented.
+    /// </param>
+    /// <param name="digitFormatProvider">
+    /// The provider to use to format the value.
+    /// -or-
+    /// a <see langword="null"/> reference to obtain the numeric format information from the current locale setting
+    /// of the operating system.
+    /// </param>
+    /// <returns>The formatted value with the digits written in the specified format.</returns>
+    /// <exception cref="FormatException">
+    /// <paramref name="digitFormat"/> is not a supported numeric format for integral types.
+    /// </exception>
+    public string ToString(
+        string? separator = " ", string? digitFormat = "D", IFormatProvider? digitFormatProvider = null)
+        => $"{{ {FormatAsList(separator: separator, digitFormat: digitFormat, digitFormatProvider)} }}";
+
+    /// <summary>
+    /// Formats the value of the current instance as a list of digits without braces.
+    /// </summary>
+    /// <param name="separator">
+    /// A separator to use to separate the digits when formatting.
+    /// -or-
+    /// a <see langword="null"/> reference to not include separators.
+    /// </param>
+    /// <param name="digitFormat">
+    /// The format to use to format the digits.
+    /// -or-
+    /// A <see langword="null"/> reference to use the default format for the type of digits being represented.
+    /// </param>
+    /// <param name="digitFormatProvider">
+    /// The provider to use to format the value.
+    /// -or-
+    /// a <see langword="null"/> reference to obtain the numeric format information from the current locale setting
+    /// of the operating system.
+    /// </param>
+    /// <returns>The formatted value with the digits written in the specified format.</returns>
+    /// <exception cref="FormatException">
+    /// <paramref name="digitFormat"/> is not a supported numeric format for integral types.
+    /// </exception>
+    public abstract string FormatAsList(
+        string? separator = null, string? digitFormat = "D", IFormatProvider? digitFormatProvider = null);
     #endregion
 
     /// <summary>
