@@ -680,7 +680,8 @@ public abstract record class DigitList<TDigit>(
 
     /// <inheritdoc/>
     public sealed override string FormatAsList(
-        string? separator = null, string? digitFormat = "D", IFormatProvider? digitFormatProvider = null)
+        string? separator = DefaultSeparator, string? digitFormat = DefaultFormat,
+        IFormatProvider? digitFormatProvider = null)
         => string.Join(separator, Digits.Select(d => d.ToString(digitFormat, digitFormatProvider)));
 
     #region ToBuilder
@@ -756,6 +757,9 @@ public abstract record class DigitList<TDigit>(
 /// </remarks>
 public abstract record class DigitList : IDigitList
 {
+    internal const string? DefaultFormat = "D";
+    internal const string? DefaultSeparator = " ";
+
     /// <inheritdoc/>
     [NonNegative] public abstract int Count { get; }
 
@@ -869,7 +873,8 @@ public abstract record class DigitList : IDigitList
     /// <paramref name="digitFormat"/> is not a supported numeric format for integral types.
     /// </exception>
     public string ToString(
-        string? separator = " ", string? digitFormat = "D", IFormatProvider? digitFormatProvider = null)
+        string? separator = DefaultSeparator, string? digitFormat = DefaultFormat,
+        IFormatProvider? digitFormatProvider = null)
         => $"{{ {FormatAsList(separator: separator, digitFormat: digitFormat, digitFormatProvider)} }}";
 
     /// <summary>
@@ -896,7 +901,8 @@ public abstract record class DigitList : IDigitList
     /// <paramref name="digitFormat"/> is not a supported numeric format for integral types.
     /// </exception>
     public abstract string FormatAsList(
-        string? separator = null, string? digitFormat = "D", IFormatProvider? digitFormatProvider = null);
+        string? separator = DefaultSeparator, string? digitFormat = DefaultFormat,
+        IFormatProvider? digitFormatProvider = null);
     #endregion
 
     /// <summary>
