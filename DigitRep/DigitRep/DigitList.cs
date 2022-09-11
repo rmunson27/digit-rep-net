@@ -910,6 +910,11 @@ public abstract record class DigitList : IDigitList
     /// </remarks>
     public abstract class Builder
     {
+        private static readonly BigInteger MaxULongDigitBase = ulong.MaxValue + BigInteger.One;
+        private const ulong MaxUIntDigitBase = uint.MaxValue + 1uL;
+        private const uint MaxUShortDigitBase = ushort.MaxValue + 1u;
+        private const ushort MaxByteDigitBase = 256;
+
         /// <summary>
         /// Gets the number of digits currently in the builder.
         /// </summary>
@@ -963,22 +968,14 @@ public abstract record class DigitList : IDigitList
         private protected abstract DigitList ToListInternal();
 
         #region Factory Methods
-        /// <summary>
-        /// Gets a new instance of this class capable of handling the smallest possible integral representation of
-        /// digits in the given base.
-        /// </summary>
-        /// <remarks>
-        /// Attempting to add digits larger than the base to the result of this method may cause an exception.
-        /// <para/>
-        /// Passing a negative <paramref name="Base"/> value to this method will not cause an exception, but in this
-        /// case the method will return a builder that can only handle <see cref="byte"/> digits.
-        /// </remarks>
-        /// <param name="Base"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] BigInteger Base)
-            => Base > ulong.MaxValue
-                ? new BigIntegerDigitList.Builder()
-                : NewFromBaseSizeInternal(unchecked((ulong)Base));
+            => Base.CompareTo(MaxULongDigitBase) switch
+            {
+                > 0 => new BigIntegerDigitList.Builder(),
+                0 => new ULongDigitList.Builder(),
+                < 0 => NewFromBaseSizeInternal((ulong)Base),
+            };
 
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ulong Base)
@@ -987,17 +984,17 @@ public abstract record class DigitList : IDigitList
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Builder NewFromBaseSizeInternal([GreaterThanOrEqualToInteger(2)] ulong Base) => Base switch
         {
-            > uint.MaxValue => new ULongDigitList.Builder(),
-            > ushort.MaxValue => new UIntDigitList.Builder(),
-            > byte.MaxValue => new UShortDigitList.Builder(),
+            > MaxUIntDigitBase => new ULongDigitList.Builder(),
+            > MaxUShortDigitBase => new UIntDigitList.Builder(),
+            > MaxByteDigitBase => new UShortDigitList.Builder(),
             _ => new ByteDigitList.Builder(),
         };
 
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] uint Base) => Base switch
         {
-            > ushort.MaxValue => new UIntDigitList.Builder(),
-            > byte.MaxValue => new UShortDigitList.Builder(),
+            > MaxUShortDigitBase => new UIntDigitList.Builder(),
+            > MaxByteDigitBase => new UShortDigitList.Builder(),
             _ => new ByteDigitList.Builder(),
         };
 
@@ -1011,7 +1008,7 @@ public abstract record class DigitList : IDigitList
         /// <param name="Base"></param>
         /// <returns></returns>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ushort Base)
-            => Base > byte.MaxValue ? new UShortDigitList.Builder() : new ByteDigitList.Builder();
+            => Base > MaxByteDigitBase ? new UShortDigitList.Builder() : new ByteDigitList.Builder();
     }
 }
 #endregion
