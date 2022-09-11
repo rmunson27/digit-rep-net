@@ -14,6 +14,50 @@ namespace Rem.Core.Math.DigitsTest;
 public class DigitListTest
 {
     /// <summary>
+    /// Tests the <see cref="DigitList.Builder.NewFromBaseSize(BigInteger)"/> factory method and overloads.
+    /// </summary>
+    [TestMethod]
+    public void TestNewBuilderFromBaseSize()
+    {
+        // Test the limits of the range of builder types based on the size of the base passed in
+        // A list of a given digit type should be able to handle a base that is one too large for the type
+        var tests = new (Type SmallerBuilderType, Type BiggerBuilderType, BigInteger Limit)[]
+        { 
+            (typeof(ByteDigitList.Builder), typeof(UShortDigitList.Builder), byte.MaxValue + BigInteger.One),
+            (typeof(UShortDigitList.Builder), typeof(UIntDigitList.Builder), ushort.MaxValue + BigInteger.One),
+            (typeof(UIntDigitList.Builder), typeof(ULongDigitList.Builder), uint.MaxValue + BigInteger.One),
+            (typeof(ULongDigitList.Builder), typeof(BigIntegerDigitList.Builder), ulong.MaxValue + BigInteger.One),
+        };
+
+        foreach (var (smallerType, biggerType, limit) in tests)
+        {
+            Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(limit), smallerType);
+            Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(limit + 1), biggerType);
+
+            if (limit < ulong.MaxValue)
+            {
+                var fixedSizeLimit = (ulong)limit;
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit), smallerType);
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit + 1), biggerType);
+            }
+
+            if (limit < uint.MaxValue)
+            {
+                var fixedSizeLimit = (uint)limit;
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit), smallerType);
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit + 1), biggerType);
+            }
+
+            if (limit < ushort.MaxValue)
+            {
+                var fixedSizeLimit = (ushort)limit;
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit), smallerType);
+                Assert.IsInstanceOfType(DigitList.Builder.NewFromBaseSize(fixedSizeLimit + 1), biggerType);
+            }
+        }
+    }
+
+    /// <summary>
     /// Tests the <see cref="DigitList.WithoutLeadingZeroes"/> method.
     /// </summary>
     [TestMethod]
