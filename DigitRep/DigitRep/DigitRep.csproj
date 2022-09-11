@@ -4,7 +4,7 @@
 		<Product>Rem.Core.Numerics.Digits</Product>
 		<PackageId>Rem.Core.Numerics.Digits</PackageId>
 		<RootNamespace>Rem.Core.Numerics.Digits</RootNamespace>
-		<Version>1.0</Version>
+		<Version>1.0.1</Version>
 		<Description>
 			A lightweight utility that can be used to represent a numerical value in digits of any base.
 		</Description>
@@ -18,7 +18,7 @@
 		<TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<PackageReleaseNotes>
-			Created the package.
+			Added better formatting methods for digit lists and integral representations, and made digit size selection accurate for bases that exceed the maximum value of a numeric digit type by 1 (as all digits in such bases are representable as instances of the type).
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
