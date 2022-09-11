@@ -102,19 +102,81 @@ public sealed record class SignedIntegralDigitRep
     /// <returns></returns>
     public override int GetHashCode() => HashCode.Combine(IsNegative, Base, Digits);
 
+    #region ToString
     /// <summary>
     /// Gets a string that represents the current instance.
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
+    public override string ToString() => ToString(digitFormat: DigitList.DefaultFormat);
+
+    /// <summary>
+    /// Gets a string that represents the current instance with the digits and base formatted using the provided
+    /// number format.
+    /// </summary>
+    /// <param name="separator">
+    /// A separator to use to separate the digits when formatting.
+    /// -or-
+    /// a <see langword="null"/> reference to not include separators.
+    /// </param>
+    /// <param name="numberFormat">
+    /// The format to use to format the digits and base.
+    /// -or-
+    /// A <see langword="null"/> reference to use the default format for the type of the digits and the base.
+    /// </param>
+    /// <param name="numberFormatProvider">
+    /// The provider to use to format the value.
+    /// -or-
+    /// a <see langword="null"/> reference to obtain the numeric format information from the current locale setting
+    /// of the operating system.
+    /// </param>
+    /// <returns></returns>
+    public string ToString(
+        string? separator = DigitList.DefaultSeparator, string? numberFormat = DigitList.DefaultFormat,
+        IFormatProvider? numberFormatProvider = null)
+        => ToString(
+            separator: separator, numberFormat, numberFormat, numberFormatProvider);
+
+    /// <summary>
+    /// Gets a string that represents the current instance with the digits and base formatted using the provided
+    /// number formats.
+    /// </summary>
+    /// <param name="separator">
+    /// A separator to use to separate the digits when formatting.
+    /// -or-
+    /// a <see langword="null"/> reference to not include separators.
+    /// </param>
+    /// <param name="digitFormat">
+    /// The format to use to format the digits.
+    /// -or-
+    /// A <see langword="null"/> reference to use the default format for the type of the digits.
+    /// </param>
+    /// <param name="baseFormat">
+    /// The format to use to format the base.
+    /// -or-
+    /// A <see langword="null"/> reference to use the default format for the base.
+    /// </param>
+    /// <param name="numberFormatProvider">
+    /// The provider to use to format the value.
+    /// -or-
+    /// a <see langword="null"/> reference to obtain the numeric format information from the current locale setting
+    /// of the operating system.
+    /// </param>
+    /// <returns></returns>
+    public string ToString(
+        string? separator = DigitList.DefaultSeparator,
+        string? digitFormat = DigitList.DefaultFormat, string? baseFormat = "D",
+        IFormatProvider? numberFormatProvider = null)
     {
         return Digits.Count switch
         {
             0 => "0",
-            1 => $"{formatNegSign()}{Digits[0]}",
-            _ => $"{formatNegSign()}{Digits} (Base {Base})",
+            1 => $"{formatNegSign()}{Digits[0].ToString(digitFormat, numberFormatProvider)}",
+            _ => $"{formatNegSign()}"
+                    + Digits.ToString(separator: separator, digitFormat: digitFormat, numberFormatProvider)
+                    + $" (Base {Base.ToString(baseFormat, numberFormatProvider)})",
         };
 
         string formatNegSign() => IsNegative ? "-" : string.Empty;
     }
+    #endregion
 }
