@@ -969,8 +969,9 @@ public abstract record class DigitList : IDigitList
 
         #region Factory Methods
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="Base"/> was negative.</exception>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] BigInteger Base)
-            => Base.CompareTo(MaxULongDigitBase) switch
+            => Throw.IfArgNegative(Base, nameof(Base)).CompareTo(MaxULongDigitBase) switch
             {
                 > 0 => new BigIntegerDigitList.Builder(),
                 0 => new ULongDigitList.Builder(),
