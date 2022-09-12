@@ -826,6 +826,44 @@ public abstract record class DigitList : IDigitList
     public abstract bool IsEquivalentTo(DigitList other);
     #endregion
 
+    #region Factory
+    /// <inheritdoc cref="EmptyFromBaseSize(ushort)"/>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="Base"/> was negative.</exception>
+    public static DigitList EmptyFromBaseSize([GreaterThanOrEqualToInteger(2)] BigInteger Base)
+        => EmptyFromBaseDigitSize(BaseDigitSize.Min(Throw.IfArgNegative(Base, nameof(Base))));
+
+    /// <inheritdoc cref="EmptyFromBaseSize(ushort)"/>
+    public static DigitList EmptyFromBaseSize([GreaterThanOrEqualToInteger(2)] ulong Base)
+        => EmptyFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
+
+    /// <inheritdoc cref="EmptyFromBaseSize(ushort)"/>
+    public static DigitList EmptyFromBaseSize([GreaterThanOrEqualToInteger(2)] uint Base)
+        => EmptyFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
+
+    /// <summary>
+    /// Gets a new empty instance of this class capable of handling the smallest possible integral representation of
+    /// digits in the given base.
+    /// </summary>
+    /// <remarks>
+    /// Attempting to add digits larger than the base to the result of a call to <see cref="ToBuilder"/> on the return
+    /// value of this method may cause an exception.
+    /// </remarks>
+    /// <param name="Base"></param>
+    /// <returns></returns>
+    public static DigitList EmptyFromBaseSize([GreaterThanOrEqualToInteger(2)] ushort Base)
+        => EmptyFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static DigitList EmptyFromBaseDigitSize([NameableEnum] BigIntegerBaseDigitSize Base) => Base switch
+    {
+        BigIntegerBaseDigitSize.BigInteger => new BigIntegerDigitList(ImmutableArray<BigInteger>.Empty),
+        BigIntegerBaseDigitSize.ULong => new ULongDigitList(ImmutableArray<ulong>.Empty),
+        BigIntegerBaseDigitSize.UInt => new UIntDigitList(ImmutableArray<uint>.Empty),
+        BigIntegerBaseDigitSize.UShort => new UShortDigitList(ImmutableArray<ushort>.Empty),
+        _ => new ByteDigitList(ImmutableArray<byte>.Empty),
+    };
+    #endregion
+
     #region Builder
     /// <summary>
     /// Gets a builder object that can be used to get a modified copy of this list.
@@ -916,11 +954,6 @@ public abstract record class DigitList : IDigitList
     /// </remarks>
     public abstract class Builder
     {
-        private static readonly BigInteger MaxULongDigitBase = ulong.MaxValue + BigInteger.One;
-        private const ulong MaxUIntDigitBase = uint.MaxValue + 1uL;
-        private const uint MaxUShortDigitBase = ushort.MaxValue + 1u;
-        private const ushort MaxByteDigitBase = 256;
-
         /// <summary>
         /// Gets the number of digits currently in the builder.
         /// </summary>
@@ -977,33 +1010,15 @@ public abstract record class DigitList : IDigitList
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="Base"/> was negative.</exception>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] BigInteger Base)
-            => Throw.IfArgNegative(Base, nameof(Base)).CompareTo(MaxULongDigitBase) switch
-            {
-                > 0 => new BigIntegerDigitList.Builder(),
-                0 => new ULongDigitList.Builder(),
-                < 0 => NewFromBaseSizeInternal((ulong)Base),
-            };
+            => NewFromBaseDigitSize(BaseDigitSize.Min(Throw.IfArgNegative(Base, nameof(Base))));
 
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ulong Base)
-            => NewFromBaseSizeInternal(Base);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Builder NewFromBaseSizeInternal([GreaterThanOrEqualToInteger(2)] ulong Base) => Base switch
-        {
-            > MaxUIntDigitBase => new ULongDigitList.Builder(),
-            > MaxUShortDigitBase => new UIntDigitList.Builder(),
-            > MaxByteDigitBase => new UShortDigitList.Builder(),
-            _ => new ByteDigitList.Builder(),
-        };
+            => NewFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
 
         /// <inheritdoc cref="NewFromBaseSize(ushort)"/>
-        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] uint Base) => Base switch
-        {
-            > MaxUShortDigitBase => new UIntDigitList.Builder(),
-            > MaxByteDigitBase => new UShortDigitList.Builder(),
-            _ => new ByteDigitList.Builder(),
-        };
+        public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] uint Base)
+            => NewFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
 
         /// <summary>
         /// Gets a new instance of this class capable of handling the smallest possible integral representation of
@@ -1015,7 +1030,18 @@ public abstract record class DigitList : IDigitList
         /// <param name="Base"></param>
         /// <returns></returns>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ushort Base)
-            => Base > MaxByteDigitBase ? new UShortDigitList.Builder() : new ByteDigitList.Builder();
+            => NewFromBaseDigitSize((BigIntegerBaseDigitSize)BaseDigitSize.Min(Base));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Builder NewFromBaseDigitSize([NameableEnum] BigIntegerBaseDigitSize minSize)
+            => minSize switch
+            {
+                BigIntegerBaseDigitSize.BigInteger => new BigIntegerDigitList.Builder(),
+                BigIntegerBaseDigitSize.ULong => new ULongDigitList.Builder(),
+                BigIntegerBaseDigitSize.UInt => new UIntDigitList.Builder(),
+                BigIntegerBaseDigitSize.UShort => new UShortDigitList.Builder(),
+                _ => new ByteDigitList.Builder(),
+            };
         #endregion
     }
 }
