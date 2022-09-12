@@ -19,6 +19,8 @@ public static class Bases
     /// The maximum base for which all digits can be stored in a <see cref="ulong"/>.
     /// </summary>
     /// <remarks>
+    /// This value is equal to 2^64 = 18,446,744,073,709,551,616.
+    /// <para/>
     /// Using any base above this value will require all digits to be stored in a <see cref="BigInteger"/>.
     /// </remarks>
     public static readonly BigInteger MaxULongDigitBase = ulong.MaxValue + BigInteger.One;
@@ -26,11 +28,17 @@ public static class Bases
     /// <summary>
     /// The maximum base for which all digits can be stored in a <see cref="uint"/>.
     /// </summary>
+    /// <remarks>
+    /// This value is equal to 2^32 = 4,294,967,296.
+    /// </remarks>
     public const ulong MaxUIntDigitBase = uint.MaxValue + 1uL;
 
     /// <summary>
     /// The maximum base for which all digits can be stored in a <see cref="ushort"/>.
     /// </summary>
+    /// <remarks>
+    /// This value is equal to 2^16 = 65,536.
+    /// </remarks>
     public const uint MaxUShortDigitBase = ushort.MaxValue + 1u;
 
     /// <summary>
