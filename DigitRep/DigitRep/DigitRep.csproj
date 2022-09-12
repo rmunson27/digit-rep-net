@@ -4,7 +4,7 @@
 		<Product>Rem.Core.Numerics.Digits</Product>
 		<PackageId>Rem.Core.Numerics.Digits</PackageId>
 		<RootNamespace>Rem.Core.Numerics.Digits</RootNamespace>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Description>
 			A lightweight utility that can be used to represent a numerical value in digits of any base.
 		</Description>
@@ -18,7 +18,7 @@
 		<TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<PackageReleaseNotes>
-			Added methods for generating empty digit lists from the size of a numerical base (calls to `ToBuilder` on the return values will also respect the base size).
+			Exposed functionality for determining the minimum size of digits in a given base (was internal in previous versions).
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
