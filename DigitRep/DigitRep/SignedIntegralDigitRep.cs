@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rem.Core.Math.Digits;
+namespace Rem.Core.Numerics.Digits;
 
 /// <summary>
 /// A representation of a signed integral value in a given base.

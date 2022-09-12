@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rem.Core.Math.Digits;
+namespace Rem.Core.Numerics.Digits;
 
 #region Classes
 #region Concrete
