@@ -10,15 +10,36 @@ using System.Threading.Tasks;
 namespace Rem.Core.Numerics.Digits;
 
 /// <summary>
-/// Helper methods relating to integral bases.
+/// Helper functionality relating to integral bases.
 /// </summary>
 public static class Bases
 {
-    private static readonly BigInteger MaxULongDigitBase = ulong.MaxValue + BigInteger.One;
-    private const ulong MaxUIntDigitBase = uint.MaxValue + 1uL;
-    private const uint MaxUShortDigitBase = ushort.MaxValue + 1u;
-    private const ushort MaxByteDigitBase = 256;
+    #region Constants
+    /// <summary>
+    /// The maximum base for which all digits can be stored in a <see cref="ulong"/>.
+    /// </summary>
+    /// <remarks>
+    /// Using any base above this value will require all digits to be stored in a <see cref="BigInteger"/>.
+    /// </remarks>
+    public static readonly BigInteger MaxULongDigitBase = ulong.MaxValue + BigInteger.One;
 
+    /// <summary>
+    /// The maximum base for which all digits can be stored in a <see cref="uint"/>.
+    /// </summary>
+    public const ulong MaxUIntDigitBase = uint.MaxValue + 1uL;
+
+    /// <summary>
+    /// The maximum base for which all digits can be stored in a <see cref="ushort"/>.
+    /// </summary>
+    public const uint MaxUShortDigitBase = ushort.MaxValue + 1u;
+
+    /// <summary>
+    /// The maximum base for which all digits can be stored in a <see cref="byte"/>.
+    /// </summary>
+    public const ushort MaxByteDigitBase = 256;
+    #endregion
+
+    #region Methods
     /// <inheritdoc cref="ShortestDigitType(ushort)"/>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="Base"/> was negative.</exception>
     public static DigitType ShortestDigitType([GreaterThanOrEqualToInteger(2)] BigInteger Base)
@@ -57,4 +78,5 @@ public static class Bases
     /// <returns></returns>
     public static DigitType ShortestDigitType([GreaterThanOrEqualToInteger(2)] ushort Base)
         => Base > MaxByteDigitBase ? DigitType.UShort : DigitType.Byte;
+    #endregion
 }
