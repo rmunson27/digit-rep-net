@@ -1016,9 +1016,9 @@ public abstract record class DigitList : IDigitList
         /// <returns></returns>
         public static Builder NewFromBaseSize([GreaterThanOrEqualToInteger(2)] ushort Base)
             => Base > MaxByteDigitBase ? new UShortDigitList.Builder() : new ByteDigitList.Builder();
+        #endregion
     }
 }
-#endregion
 #endregion
 #endregion
 
