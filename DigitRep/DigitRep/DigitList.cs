@@ -21,6 +21,11 @@ namespace Rem.Core.Numerics.Digits;
 public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<byte> Digits)
     : DigitList<byte>(Digits), IByteDigitList
 {
+    /// <summary>
+    /// An empty <see cref="ByteDigitList"/>.
+    /// </summary>
+    public static readonly ByteDigitList Empty = new(ImmutableArray<byte>.Empty);
+
     #region Index
     ushort IUShortDigitList.this[int index] => Digits[index];
 
@@ -154,6 +159,11 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
 public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray<ushort> Digits)
     : DigitList<ushort>(Digits), IUShortDigitList
 {
+    /// <summary>
+    /// An empty <see cref="UShortDigitList"/>.
+    /// </summary>
+    public static readonly UShortDigitList Empty = new(ImmutableArray<ushort>.Empty);
+
     #region Index
     uint IUIntDigitList.this[int index] => Digits[index];
 
@@ -277,6 +287,11 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
 public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<uint> Digits)
     : DigitList<uint>(Digits), IUIntDigitList
 {
+    /// <summary>
+    /// An empty <see cref="UIntDigitList"/>.
+    /// </summary>
+    public static readonly UIntDigitList Empty = new(ImmutableArray<uint>.Empty);
+
     #region Index
     /// <inheritdoc cref="DigitList.this[int]"/>
     public new uint this[[NonNegative] int index] => Digits[index];
@@ -395,6 +410,11 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
 public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits)
     : DigitList<ulong>(Digits), IULongDigitList
 {
+    /// <summary>
+    /// An empty <see cref="ULongDigitList"/>.
+    /// </summary>
+    public static readonly ULongDigitList Empty = new(ImmutableArray<ulong>.Empty);
+
     #region Index
     /// <inheritdoc cref="DigitList.this[int]"/>
     public new ulong this[[NonNegative] int index] => Digits[index];
@@ -500,31 +520,50 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
 /// </summary>
 public sealed record class BigIntegerDigitList : DigitList<BigInteger>
 {
+    /// <summary>
+    /// An empty <see cref="BigIntegerDigitList"/>.
+    /// </summary>
+    public static readonly BigIntegerDigitList Empty = new(ImmutableArray<BigInteger>.Empty);
+
     #region Index
     [return: NonNegative] private protected override BigInteger IndexInternal([NonNegative] int index)
         => Digits[index];
     #endregion
 
-    #region Constructors
-    /// <inheritdoc cref="BigIntegerDigitList(IEnumerable{BigInteger})"/>
-    public BigIntegerDigitList(params BigInteger[] Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    #region Constructor
+    /// <summary>
+    /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class with the list of digits to wrap.
+    /// </summary>
+    /// <remarks>
+    /// This constructor is private since it does not do any checking of the signs of the digits (as the builder class
+    /// ensures negative digits cannot be added).
+    /// </remarks>
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
+    /// </exception>
+    private BigIntegerDigitList([NonDefaultableStruct] ImmutableArray<BigInteger> Digits) : base(Digits) { }
+    #endregion
+
+    #region Factory Methods
+    /// <inheritdoc cref="CreateRange(IEnumerable{BigInteger})"/>
+    public static BigIntegerDigitList CreateRange(params BigInteger[] Digits)
+        => CreateRange(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class wrapping the digits passed in.
+    /// Creates a new <see cref="BigIntegerDigitList"/> with the list of digits to wrap.
     /// </summary>
     /// <param name="Digits"></param>
+    /// <returns></returns>
     /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Digits"/> contained a negative number.
     /// </exception>
-    public BigIntegerDigitList(IEnumerable<BigInteger> Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    public static BigIntegerDigitList CreateRange(IEnumerable<BigInteger> Digits)
+        => CreateRange(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="BigIntegerDigitList"/> class with the list of digits to wrap.
+    /// Creates a new <see cref="BigIntegerDigitList"/> with the list of digits to wrap.
     /// </summary>
     /// <param name="Digits"></param>
     /// <exception cref="StructArgumentDefaultException">
@@ -533,8 +572,10 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="Digits"/> contained a negative number.
     /// </exception>
-    public BigIntegerDigitList([NonDefaultableStruct] ImmutableArray<BigInteger> Digits) : base(Digits)
+    public static BigIntegerDigitList CreateRange([NonDefaultableStruct] ImmutableArray<BigInteger> Digits)
     {
+        Throw.IfStructArgDefault(Digits, nameof(Digits));
+
         foreach (var digit in Digits)
         {
             if (digit < 0)
@@ -542,6 +583,8 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
                 throw new ArgumentOutOfRangeException(null, "Cannot construct a digit list with negative digits.");
             }
         }
+
+        return new(Digits);
     }
     #endregion
 
@@ -868,11 +911,11 @@ public abstract record class DigitList : IDigitList
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static DigitList EmptyFromDigitType([NameableEnum] DigitType Base) => Base switch
     {
-        DigitType.BigInteger => new BigIntegerDigitList(ImmutableArray<BigInteger>.Empty),
-        DigitType.ULong => new ULongDigitList(ImmutableArray<ulong>.Empty),
-        DigitType.UInt => new UIntDigitList(ImmutableArray<uint>.Empty),
-        DigitType.UShort => new UShortDigitList(ImmutableArray<ushort>.Empty),
-        _ => new ByteDigitList(ImmutableArray<byte>.Empty),
+        DigitType.BigInteger => BigIntegerDigitList.Empty,
+        DigitType.ULong => ULongDigitList.Empty,
+        DigitType.UInt => UIntDigitList.Empty,
+        DigitType.UShort => UShortDigitList.Empty,
+        _ => ByteDigitList.Empty,
     };
     #endregion
 
