@@ -771,6 +771,14 @@ public abstract record class DigitList<TDigit>(
     }
     #endregion
 
+    #region Deconstruction
+    /// <summary>
+    /// Deconstructs the current instance.
+    /// </summary>
+    /// <param name="Digits"></param>
+    public void Deconstruct([NonDefaultableStruct] out ImmutableArray<TDigit> Digits) { Digits = this.Digits; }
+    #endregion
+
     /// <summary>
     /// A builder for a <see cref="DigitList{TDigit}"/>.
     /// </summary>
