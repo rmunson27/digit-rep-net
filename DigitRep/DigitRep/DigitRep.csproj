@@ -4,7 +4,7 @@
 		<Product>Rem.Core.Numerics.Digits</Product>
 		<PackageId>Rem.Core.Numerics.Digits</PackageId>
 		<RootNamespace>Rem.Core.Numerics.Digits</RootNamespace>
-		<Version>1.1</Version>
+		<Version>1.1.1</Version>
 		<Description>
 			A lightweight utility that can be used to represent a numerical value in digits of any base.
 		</Description>
@@ -18,7 +18,7 @@
 		<TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<PackageReleaseNotes>
-			Hid the internal immutable array builder from the BigInteger digit list builder (to avoid allowing negative digits to be added to the list), and removed the public digit list constructors in favor of CreateRange factory methods. This may cause breaking changes from versions 1.0.* if the BigInteger digit list array builder or digit list constructors were used.
+			Added methods for splitting a digit list at a series of supplied indices, and updated various dependencies.
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
