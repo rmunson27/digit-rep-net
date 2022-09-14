@@ -70,6 +70,59 @@ public class DigitListTest
     }
 
     /// <summary>
+    /// Tests the <see cref="DigitList.SplitAtIndices(int[])"/> method.
+    /// </summary>
+    [TestMethod]
+    public void TestSplitAtIndices()
+    {
+        var list = ByteDigitList.CreateRange(0, 1, 2, 3, 4, 5, 6);
+
+        Assert.IsTrue(list.SplitAtIndices().SequenceEqual(new[] { list }));
+        Assert.IsTrue(list.SplitAtIndices(0).SequenceEqual(new[] { ByteDigitList.Empty, list }));
+        Assert.IsTrue(
+            list.SplitAtIndices(2, 4).SequenceEqual(new[]
+            {
+                ByteDigitList.CreateRange(0, 1), ByteDigitList.CreateRange(2, 3), ByteDigitList.CreateRange(4, 5, 6)
+            }));
+
+        Assert.ThrowsException<ArgumentNullException>(() => list.SplitAtIndices(null!));
+        Assert.ThrowsException<IndexOutOfRangeException>(() => list.SplitAtIndices(7));
+        Assert.ThrowsException<IndexOutOfRangeException>(() => list.SplitAtIndices(-1));
+        Assert.ThrowsException<ArgumentException>(() => list.SplitAtIndices(4, 2));
+    }
+
+    private protected static List<IEnumerable<byte>> SplitIntoArraySegmentsAtIndices(ByteDigitList list, params int[] indices)
+    {
+        var subArrays = new List<IEnumerable<byte>>();
+        int lastIndex = 0;
+        IEnumerable<byte> enumerable = list;
+
+        // Add all the subsegments indicated by the indices
+        for (int i = 0; i < indices.Length; i++)
+        {
+            var currentIndex = indices[i];
+            if (currentIndex < lastIndex)
+            {
+                throw new ArgumentException(
+                    "Indices passed in must be non-negative and in (non-strictly) ascending order.", nameof(indices));
+            }
+            else if (currentIndex >= list.Count)
+            {
+                throw new IndexOutOfRangeException($"Index {currentIndex} was out of range of the digit list.");
+            }
+
+            subArrays.Add(enumerable.Skip(lastIndex).Take(currentIndex - lastIndex));
+
+            lastIndex = currentIndex;
+        }
+
+        // Add the final subsegment
+        subArrays.Add(enumerable.Skip(lastIndex).Take(list.Count - lastIndex));
+
+        return subArrays;
+    }
+
+    /// <summary>
     /// Tests the <see cref="DigitList.IsEquivalentTo(DigitList)"/> method.
     /// </summary>
     [TestMethod]

@@ -111,6 +111,20 @@ public sealed record class ByteDigitList : DigitList<byte>, IByteDigitList
         };
     #endregion
 
+    #region Splitting
+    private protected override IReadOnlyList<DigitList<byte>> SplitAtIndicesGenericInternal(params int[] indices)
+        => SplitAtIndices(indices);
+
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<ByteDigitList> SplitAtIndices(params int[] indices)
+    {
+        if (Throw.IfArgNull(indices, nameof(indices)).Length == 0) return ImmutableList.Create(this);
+        else return SplitIntoArraySegmentsAtIndices(indices)
+                        .Select(ds => new ByteDigitList(ds.ToImmutableArray()))
+                        .ToImmutableList();
+    }
+    #endregion
+
     private protected override DigitList<byte>.Builder ToGenericBuilderInternal() => ToBuilder();
 
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -254,6 +268,20 @@ public sealed record class UShortDigitList : DigitList<ushort>, IUShortDigitList
         };
     #endregion
 
+    #region Splitting
+    private protected override IReadOnlyList<DigitList<ushort>> SplitAtIndicesGenericInternal(params int[] indices)
+        => SplitAtIndices(indices);
+
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<UShortDigitList> SplitAtIndices(params int[] indices)
+    {
+        if (Throw.IfArgNull(indices, nameof(indices)).Length == 0) return ImmutableList.Create(this);
+        else return SplitIntoArraySegmentsAtIndices(indices)
+                        .Select(ds => new UShortDigitList(ds.ToImmutableArray()))
+                        .ToImmutableList();
+    }
+    #endregion
+
     private protected override DigitList<ushort>.Builder ToGenericBuilderInternal() => ToBuilder();
 
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -390,6 +418,20 @@ public sealed record class UIntDigitList : DigitList<uint>, IUIntDigitList
         };
     #endregion
 
+    #region Splitting
+    private protected override IReadOnlyList<DigitList<uint>> SplitAtIndicesGenericInternal(params int[] indices)
+        => SplitAtIndices(indices);
+
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<UIntDigitList> SplitAtIndices(params int[] indices)
+    {
+        if (Throw.IfArgNull(indices, nameof(indices)).Length == 0) return ImmutableList.Create(this);
+        else return SplitIntoArraySegmentsAtIndices(indices)
+                        .Select(ds => new UIntDigitList(ds.ToImmutableArray()))
+                        .ToImmutableList();
+    }
+    #endregion
+
     private protected override DigitList<uint>.Builder ToGenericBuilderInternal() => ToBuilder();
 
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -519,6 +561,20 @@ public sealed record class ULongDigitList : DigitList<ulong>, IULongDigitList
             UShortDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ulong)n)),
             ByteDigitList(var otherDigits) => Digits.SequenceEqual(otherDigits.Select(n => (ulong)n)),
         };
+    #endregion
+
+    #region Splitting
+    private protected override IReadOnlyList<DigitList<ulong>> SplitAtIndicesGenericInternal(params int[] indices)
+        => SplitAtIndices(indices);
+
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<ULongDigitList> SplitAtIndices(params int[] indices)
+    {
+        if (Throw.IfArgNull(indices, nameof(indices)).Length == 0) return ImmutableList.Create(this);
+        else return SplitIntoArraySegmentsAtIndices(indices)
+                        .Select(ds => new ULongDigitList(ds.ToImmutableArray()))
+                        .ToImmutableList();
+    }
     #endregion
 
     private protected override DigitList<ulong>.Builder ToGenericBuilderInternal() => ToBuilder();
@@ -673,6 +729,20 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
         };
     #endregion
 
+    #region Splitting
+    private protected override IReadOnlyList<DigitList<BigInteger>> SplitAtIndicesGenericInternal(params int[] indices)
+        => SplitAtIndices(indices);
+
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<BigIntegerDigitList> SplitAtIndices(params int[] indices)
+    {
+        if (Throw.IfArgNull(indices, nameof(indices)).Length == 0) return ImmutableList.Create(this);
+        else return SplitIntoArraySegmentsAtIndices(indices)
+                        .Select(ds => new BigIntegerDigitList(ds.ToImmutableArray()))
+                        .ToImmutableList();
+    }
+    #endregion
+
     private protected override DigitList<BigInteger>.Builder ToGenericBuilderInternal() => ToBuilder();
 
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -790,6 +860,48 @@ public abstract record class DigitList<TDigit>(
         string? separator = DefaultSeparator, string? digitFormat = DefaultFormat,
         IFormatProvider? digitFormatProvider = null)
         => string.Join(separator, Digits.Select(d => d.ToString(digitFormat, digitFormatProvider)));
+
+    private protected sealed override IReadOnlyList<DigitList> SplitAtIndicesInternal(params int[] indices)
+        => SplitAtIndicesGenericInternal();
+
+    /// <inheritdoc cref="DigitList.SplitAtIndicesInternal(int[])"/>
+    private protected abstract IReadOnlyList<DigitList<TDigit>> SplitAtIndicesGenericInternal(params int[] indices);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private protected List<ImmutableArraySegment<TDigit>> SplitIntoArraySegmentsAtIndices(params int[] indices)
+    {
+        var subArrays = new List<ImmutableArraySegment<TDigit>>();
+        int lastIndex = 0;
+        var superSegment = ImmutableArraySegment<TDigit>.Create(Digits);
+
+        // Add all the subsegments indicated by the indices
+        for (int i = 0; i < indices.Length; i++)
+        {
+            var currentIndex = indices[i];
+            if (currentIndex < lastIndex)
+            {
+                if (currentIndex < 0) throw new IndexOutOfRangeException($"Indices must be non-negative.");
+                else
+                {
+                    throw new ArgumentException(
+                        "Indices passed in must be in (non-strictly) ascending order.", nameof(indices));
+                }
+            }
+            else if (currentIndex >= Digits.Length)
+            {
+                throw new IndexOutOfRangeException($"Index {currentIndex} was out of range of the digit list.");
+            }
+
+            subArrays.Add(superSegment.Subsegment(lastIndex, currentIndex - lastIndex));
+
+            lastIndex = currentIndex;
+        }
+
+        // Add the final subsegment
+        subArrays.Add(superSegment.Subsegment(lastIndex, Digits.Length - lastIndex));
+
+        return subArrays;
+    }
 
     #region ToBuilder
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -939,6 +1051,40 @@ public abstract record class DigitList : IDigitList
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> was <see langword="null"/>.</exception>
     public abstract bool IsEquivalentTo(DigitList other);
+    #endregion
+
+    #region Splitting
+    /// <summary>
+    /// Splits the list into sublists, starting at the beginning of the list and using the indices passed in as
+    /// end points of one or more sublists, finishing at the end of the list.
+    /// </summary>
+    /// <param name="indices">
+    /// A list of indices to split the list on.
+    /// <para/>
+    /// The beginning and end of the list should be omitted - for example, passing in 3 and 5 for the indices will
+    /// return sub-segments with the ranges [..3], [3..5], [5..].
+    /// </param>
+    /// <returns>
+    /// A list of sublists based on the indices passed in, or a list containing the current instance if no indices
+    /// were passed in.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="indices"/> was <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="IndexOutOfRangeException">
+    /// One of the supplied indices was negative or otherwise out of range of the list.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// The list of indices was not increasing.
+    /// </exception>
+    public IReadOnlyList<DigitList> SplitAtIndices(params int[] indices) => SplitAtIndicesInternal(indices);
+
+    /// <summary>
+    /// Allows <see cref="SplitAtIndices(int[])"/> to be implemented on more specific types in subclasses.
+    /// </summary>
+    /// <param name="indices"></param>
+    /// <returns></returns>
+    private protected abstract IReadOnlyList<DigitList> SplitAtIndicesInternal(params int[] indices);
     #endregion
 
     #region Factory
