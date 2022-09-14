@@ -18,8 +18,7 @@ namespace Rem.Core.Numerics.Digits;
 /// A wrapper for a list of <see cref="byte"/> digits.
 /// </summary>
 /// <inheritdoc cref="ULongDigitList"/>
-public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<byte> Digits)
-    : DigitList<byte>(Digits), IByteDigitList
+public sealed record class ByteDigitList : DigitList<byte>, IByteDigitList
 {
     /// <summary>
     /// An empty <see cref="ByteDigitList"/>.
@@ -38,18 +37,33 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
         => Digits[index];
     #endregion
 
-    #region Constructors
-    /// <inheritdoc cref="ByteDigitList(IEnumerable{byte})"/>
-    public ByteDigitList(params byte[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
+    #region Constructor
+    private ByteDigitList([NonDefaultableStruct] ImmutableArray<byte> Digits) : base(Digits) { }
+    #endregion
+
+    #region Factory Methods
+    /// <inheritdoc cref="CreateRange(IEnumerable{byte})"/>
+    public static ByteDigitList CreateRange(params byte[] Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="ByteDigitList"/> class wrapping the digits passed in.
+    /// Creates a new <see cref="ByteDigitList"/> with the list of digits to wrap.
     /// </summary>
     /// <param name="Digits"></param>
-    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
-    public ByteDigitList(IEnumerable<byte> Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="Digits"/> was <see langword="null"/>.
+    /// </exception>
+    public static ByteDigitList CreateRange(IEnumerable<byte> Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
+
+    /// <summary>
+    /// Creates a new <see cref="ByteDigitList"/> with the list of digits to wrap.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
+    /// </exception>
+    public static ByteDigitList CreateRange([NonDefaultableStruct] ImmutableArray<byte> Digits) => new(Digits);
     #endregion
 
     #region IEnumerable
@@ -155,9 +169,7 @@ public sealed record class ByteDigitList([NonDefaultableStruct] ImmutableArray<b
 /// <summary>
 /// A wrapper for a list of <see cref="ushort"/> digits.
 /// </summary>
-/// <inheritdoc cref="ULongDigitList"/>
-public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray<ushort> Digits)
-    : DigitList<ushort>(Digits), IUShortDigitList
+public sealed record class UShortDigitList : DigitList<ushort>, IUShortDigitList
 {
     /// <summary>
     /// An empty <see cref="UShortDigitList"/>.
@@ -173,19 +185,33 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
-    #region Constructors
-    /// <inheritdoc cref="UShortDigitList(IEnumerable{ushort})"/>
-    public UShortDigitList(params ushort[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    #region Constructor
+    private UShortDigitList([NonDefaultableStruct] ImmutableArray<ushort> Digits) : base(Digits) { }
+    #endregion
+
+    #region Factory Methods
+    /// <inheritdoc cref="CreateRange(IEnumerable{ushort})"/>
+    public static UShortDigitList CreateRange(params ushort[] Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="UShortDigitList"/> class wrapping the digits passed in.
+    /// Creates a new <see cref="UShortDigitList"/> with the list of digits to wrap.
     /// </summary>
     /// <param name="Digits"></param>
-    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
-    public UShortDigitList(IEnumerable<ushort> Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="Digits"/> was <see langword="null"/>.
+    /// </exception>
+    public static UShortDigitList CreateRange(IEnumerable<ushort> Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
+
+    /// <summary>
+    /// Creates a new <see cref="UShortDigitList"/> with the list of digits to wrap.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
+    /// </exception>
+    public static UShortDigitList CreateRange([NonDefaultableStruct] ImmutableArray<ushort> Digits) => new(Digits);
     #endregion
 
     #region IEnumerable
@@ -283,9 +309,7 @@ public sealed record class UShortDigitList([NonDefaultableStruct] ImmutableArray
 /// <summary>
 /// A wrapper for a list of <see cref="uint"/> digits.
 /// </summary>
-/// <inheritdoc cref="ULongDigitList"/>
-public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<uint> Digits)
-    : DigitList<uint>(Digits), IUIntDigitList
+public sealed record class UIntDigitList : DigitList<uint>, IUIntDigitList
 {
     /// <summary>
     /// An empty <see cref="UIntDigitList"/>.
@@ -302,18 +326,33 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
-    #region Constructors
-    /// <inheritdoc cref="UIntDigitList(IEnumerable{uint})"/>
-    public UIntDigitList(params uint[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray()) { }
+    #region Constructor
+    private UIntDigitList([NonDefaultableStruct] ImmutableArray<uint> Digits) : base(Digits) { }
+    #endregion
+
+    #region Factory Methods
+    /// <inheritdoc cref="CreateRange(IEnumerable{uint})"/>
+    public static UIntDigitList CreateRange(params uint[] Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
 
     /// <summary>
-    /// Constructs a new instance of the <see cref="UIntDigitList"/> class wrapping the digits passed in.
+    /// Creates a new <see cref="UIntDigitList"/> with the list of digits to wrap.
     /// </summary>
     /// <param name="Digits"></param>
-    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
-    public UIntDigitList(IEnumerable<uint> Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="Digits"/> was <see langword="null"/>.
+    /// </exception>
+    public static UIntDigitList CreateRange(IEnumerable<uint> Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
+
+    /// <summary>
+    /// Creates a new <see cref="UIntDigitList"/> with the list of digits to wrap.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
+    /// </exception>
+    public static UIntDigitList CreateRange([NonDefaultableStruct] ImmutableArray<uint> Digits) => new(Digits);
     #endregion
 
     #region IEnumerable
@@ -403,12 +442,7 @@ public sealed record class UIntDigitList([NonDefaultableStruct] ImmutableArray<u
 /// <summary>
 /// A wrapper for a list of <see cref="ulong"/> digits.
 /// </summary>
-/// <param name="Digits">The list of digits to wrap.</param>
-/// <exception cref="StructArgumentDefaultException">
-/// <paramref name="Digits"/> was default.
-/// </exception>
-public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits)
-    : DigitList<ulong>(Digits), IULongDigitList
+public sealed record class ULongDigitList : DigitList<ulong>, IULongDigitList
 {
     /// <summary>
     /// An empty <see cref="ULongDigitList"/>.
@@ -423,19 +457,37 @@ public sealed record class ULongDigitList([NonDefaultableStruct] ImmutableArray<
     private protected override BigInteger IndexInternal([NonNegative] int index) => Digits[index];
     #endregion
 
-    #region Constructors
-    /// <inheritdoc cref="ULongDigitList(IEnumerable{ulong})"/>
-    public ULongDigitList(params ulong[] Digits) : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
-
+    #region Constructor
     /// <summary>
-    /// Constructs a new instance of the <see cref="ULongDigitList"/> class wrapping the digits passed in.
+    /// Constructs a new instance of this class.
     /// </summary>
     /// <param name="Digits"></param>
-    /// <exception cref="ArgumentNullException"><paramref name="Digits"/> was <see langword="null"/>.</exception>
-    public ULongDigitList(IEnumerable<ulong> Digits)
-        : this(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray())
-    { }
+    private ULongDigitList([NonDefaultableStruct] ImmutableArray<ulong> Digits) : base(Digits) { }
+    #endregion
+
+    #region Factory Methods
+    /// <inheritdoc cref="CreateRange(IEnumerable{ulong})"/>
+    public static ULongDigitList CreateRange(params ulong[] Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
+
+    /// <summary>
+    /// Creates a new <see cref="ULongDigitList"/> with the list of digits to wrap.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="Digits"/> was <see langword="null"/>.
+    /// </exception>
+    public static ULongDigitList CreateRange(IEnumerable<ulong> Digits)
+        => new(Throw.IfArgNull(Digits, nameof(Digits)).ToImmutableArray());
+
+    /// <summary>
+    /// Creates a new <see cref="ULongDigitList"/> with the list of digits to wrap.
+    /// </summary>
+    /// <param name="Digits"></param>
+    /// <exception cref="StructArgumentDefaultException">
+    /// <paramref name="Digits"/> was default.
+    /// </exception>
+    public static ULongDigitList CreateRange([NonDefaultableStruct] ImmutableArray<ulong> Digits) => new(Digits);
     #endregion
 
     #region IEnumerable

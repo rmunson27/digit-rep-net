@@ -26,13 +26,13 @@ public class DigitRepsTest
     {
         // Should strip off all leading zeroes
         Assert.That.DigitRepEquals(
-            12, new ByteDigitList(1, 0),
-            UnsignedIntegralDigitRep.Create(12, new ByteDigitList(0, 0, 0, 1, 0)));
+            12, ByteDigitList.CreateRange(1, 0),
+            UnsignedIntegralDigitRep.Create(12, ByteDigitList.CreateRange(0, 0, 0, 1, 0)));
 
         // Should be unchanged
         Assert.That.DigitRepEquals(
-            12, new ByteDigitList(1, 2, 3),
-            UnsignedIntegralDigitRep.Create(12, new ByteDigitList(1, 2, 3)));
+            12, ByteDigitList.CreateRange(1, 2, 3),
+            UnsignedIntegralDigitRep.Create(12, ByteDigitList.CreateRange(1, 2, 3)));
     }
 
     /// <summary>
@@ -42,13 +42,13 @@ public class DigitRepsTest
     public void TestUnsignedIntegralRepresentations()
     {
         // Zero tests
-        Assert.That.DigitRepEquals(12, new ByteDigitList(), InBase(0u, 12));
-        Assert.That.DigitRepEquals(12, new ByteDigitList(), InBase(0ul, 12));
+        Assert.That.DigitRepEquals(12, ByteDigitList.CreateRange(), InBase(0u, 12));
+        Assert.That.DigitRepEquals(12, ByteDigitList.CreateRange(), InBase(0ul, 12));
 
-        Assert.That.DigitRepEquals(10, new ByteDigitList(3, 4, 5, 6, 7, 0, 1), InBase(3456701u, 10));
-        Assert.That.DigitRepEquals(10, new ByteDigitList(3, 4, 5, 6, 7, 0, 1), InBase(3456701ul, 10));
-        Assert.That.DigitRepEquals(30000, new UShortDigitList(1, 4, 23), InBase(900120023u, 30000));
-        Assert.That.DigitRepEquals(30000, new UShortDigitList(1, 4, 23), InBase(900120023ul, 30000));
+        Assert.That.DigitRepEquals(10, ByteDigitList.CreateRange(3, 4, 5, 6, 7, 0, 1), InBase(3456701u, 10));
+        Assert.That.DigitRepEquals(10, ByteDigitList.CreateRange(3, 4, 5, 6, 7, 0, 1), InBase(3456701ul, 10));
+        Assert.That.DigitRepEquals(30000, UShortDigitList.CreateRange(1, 4, 23), InBase(900120023u, 30000));
+        Assert.That.DigitRepEquals(30000, UShortDigitList.CreateRange(1, 4, 23), InBase(900120023ul, 30000));
     }
 
     /// <summary>
@@ -59,18 +59,18 @@ public class DigitRepsTest
     {
         // Should strip off all leading zeroes
         Assert.That.DigitRepEquals(
-            true, 12, new ByteDigitList(1, 0),
-            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(0, 0, 0, 1, 0)));
+            true, 12, ByteDigitList.CreateRange(1, 0),
+            SignedIntegralDigitRep.Create(true, 12, ByteDigitList.CreateRange(0, 0, 0, 1, 0)));
 
         // Should set the `IsNegative` flag to `false` since the representation is equivalent to zero
         Assert.That.DigitRepEquals(
-            false, 12, new ByteDigitList(),
-            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(0, 0)));
+            false, 12, ByteDigitList.CreateRange(),
+            SignedIntegralDigitRep.Create(true, 12, ByteDigitList.CreateRange(0, 0)));
 
         // Should be unchanged
         Assert.That.DigitRepEquals(
-            true, 12, new ByteDigitList(1, 2, 3),
-            SignedIntegralDigitRep.Create(true, 12, new ByteDigitList(1, 2, 3)));
+            true, 12, ByteDigitList.CreateRange(1, 2, 3),
+            SignedIntegralDigitRep.Create(true, 12, ByteDigitList.CreateRange(1, 2, 3)));
     }
 
     /// <summary>
@@ -80,16 +80,16 @@ public class DigitRepsTest
     public void TestSignedIntegralRepresentation()
     {
         // Zero tests
-        Assert.That.DigitRepEquals(false, 12, new ByteDigitList(), InBase(0, 12));
-        Assert.That.DigitRepEquals(false, 12, new ByteDigitList(), InBase(0L, 12));
+        Assert.That.DigitRepEquals(false, 12, ByteDigitList.CreateRange(), InBase(0, 12));
+        Assert.That.DigitRepEquals(false, 12, ByteDigitList.CreateRange(), InBase(0L, 12));
 
-        Assert.That.DigitRepEquals(false, 10, new ByteDigitList(4, 2, 1, 3, 0, 5), InBase(421305, 10));
-        Assert.That.DigitRepEquals(false, 10, new ByteDigitList(4, 2, 1, 3, 0, 5), InBase(421305L, 10));
+        Assert.That.DigitRepEquals(false, 10, ByteDigitList.CreateRange(4, 2, 1, 3, 0, 5), InBase(421305, 10));
+        Assert.That.DigitRepEquals(false, 10, ByteDigitList.CreateRange(4, 2, 1, 3, 0, 5), InBase(421305L, 10));
         Assert.That.DigitRepEquals(
-            false, 10, new ByteDigitList(4, 2, 1, 3, 0, 5), InBase(new BigInteger(421305), 10));
-        Assert.That.DigitRepEquals(true, 300, new UShortDigitList(4, 20, 2, 2), InBase(-109800602, 300));
-        Assert.That.DigitRepEquals(true, 300, new UShortDigitList(4, 20, 2, 2), InBase(-109800602L, 300));
+            false, 10, ByteDigitList.CreateRange(4, 2, 1, 3, 0, 5), InBase(new BigInteger(421305), 10));
+        Assert.That.DigitRepEquals(true, 300, UShortDigitList.CreateRange(4, 20, 2, 2), InBase(-109800602, 300));
+        Assert.That.DigitRepEquals(true, 300, UShortDigitList.CreateRange(4, 20, 2, 2), InBase(-109800602L, 300));
         Assert.That.DigitRepEquals(
-            true, 300, new UShortDigitList(4, 20, 2, 2), InBase(new BigInteger(-109800602), 300));
+            true, 300, UShortDigitList.CreateRange(4, 20, 2, 2), InBase(new BigInteger(-109800602), 300));
     }
 }

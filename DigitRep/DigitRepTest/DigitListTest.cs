@@ -63,8 +63,8 @@ public class DigitListTest
     [TestMethod]
     public void TestWithoutLeadingZeroes()
     {
-        var listWithoutZeroes = new ByteDigitList(1, 2, 3, 4, 5);
-        var listWithZeroes = new ByteDigitList(0, 0, 0, 1, 2, 3, 4, 5);
+        var listWithoutZeroes = ByteDigitList.CreateRange(1, 2, 3, 4, 5);
+        var listWithZeroes = ByteDigitList.CreateRange(0, 0, 0, 1, 2, 3, 4, 5);
         Assert.AreEqual(listWithoutZeroes, listWithZeroes.WithoutLeadingZeroes());
         Assert.AreEqual(listWithoutZeroes, listWithoutZeroes.WithoutLeadingZeroes()); // Should be no change
     }
@@ -105,11 +105,11 @@ public class DigitListTest
 
     private static DigitList[] CreateEquivalentLists(params byte[] digits) => new DigitList[]
     {
-        new ByteDigitList(digits),
-        new UShortDigitList(digits.Select(b => (ushort)b)),
-        new UIntDigitList(digits.Select(b => (uint)b)),
-        new ULongDigitList(digits.Select(b => (ulong)b)),
-        new BigIntegerDigitList(digits.Select(b => (BigInteger)b)),
+        ByteDigitList.CreateRange(digits),
+        UShortDigitList.CreateRange(digits.Select(b => (ushort)b)),
+        UIntDigitList.CreateRange(digits.Select(b => (uint)b)),
+        ULongDigitList.CreateRange(digits.Select(b => (ulong)b)),
+        BigIntegerDigitList.CreateRange(digits.Select(b => (BigInteger)b)),
     };
 
     private static string GetListTypeString(DigitList list) => list switch
