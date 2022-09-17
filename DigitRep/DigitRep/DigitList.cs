@@ -1115,12 +1115,12 @@ public abstract record class DigitList : IDigitList
         => EmptyFromDigitType(Bases.ShortestDigitType(Base));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static DigitList EmptyFromDigitType([NameableEnum] DigitType Base) => Base switch
+    private static DigitList EmptyFromDigitType([NameableEnum] DigitType Base) => Base.Value switch
     {
-        DigitType.BigInteger => BigIntegerDigitList.Empty,
-        DigitType.ULong => ULongDigitList.Empty,
-        DigitType.UInt => UIntDigitList.Empty,
-        DigitType.UShort => UShortDigitList.Empty,
+        DigitType.Values.BigInteger => BigIntegerDigitList.Empty,
+        DigitType.Values.ULong => ULongDigitList.Empty,
+        DigitType.Values.UInt => UIntDigitList.Empty,
+        DigitType.Values.UShort => UShortDigitList.Empty,
         _ => ByteDigitList.Empty,
     };
     #endregion
@@ -1295,12 +1295,12 @@ public abstract record class DigitList : IDigitList
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Builder NewFromDigitType([NameableEnum] DigitType minSize)
-            => minSize switch
+            => minSize.Value switch
             {
-                DigitType.BigInteger => new BigIntegerDigitList.Builder(),
-                DigitType.ULong => new ULongDigitList.Builder(),
-                DigitType.UInt => new UIntDigitList.Builder(),
-                DigitType.UShort => new UShortDigitList.Builder(),
+                DigitType.Values.BigInteger => new BigIntegerDigitList.Builder(),
+                DigitType.Values.ULong => new ULongDigitList.Builder(),
+                DigitType.Values.UInt => new UIntDigitList.Builder(),
+                DigitType.Values.UShort => new UShortDigitList.Builder(),
                 _ => new ByteDigitList.Builder(),
             };
         #endregion
