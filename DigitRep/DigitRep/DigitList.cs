@@ -112,7 +112,7 @@ public sealed record class ByteDigitList : DigitList<byte>, IByteDigitList
     #endregion
 
     #region Splitting
-    private protected override IReadOnlyList<DigitList<byte>> SplitAtIndicesGenericInternal(params int[] indices)
+    private protected override IReadOnlyList<DigitList<byte>> SplitAtIndicesGenericInternal(int[] indices)
         => SplitAtIndices(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
@@ -269,7 +269,7 @@ public sealed record class UShortDigitList : DigitList<ushort>, IUShortDigitList
     #endregion
 
     #region Splitting
-    private protected override IReadOnlyList<DigitList<ushort>> SplitAtIndicesGenericInternal(params int[] indices)
+    private protected override IReadOnlyList<DigitList<ushort>> SplitAtIndicesGenericInternal(int[] indices)
         => SplitAtIndices(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
@@ -419,7 +419,7 @@ public sealed record class UIntDigitList : DigitList<uint>, IUIntDigitList
     #endregion
 
     #region Splitting
-    private protected override IReadOnlyList<DigitList<uint>> SplitAtIndicesGenericInternal(params int[] indices)
+    private protected override IReadOnlyList<DigitList<uint>> SplitAtIndicesGenericInternal(int[] indices)
         => SplitAtIndices(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
@@ -564,7 +564,7 @@ public sealed record class ULongDigitList : DigitList<ulong>, IULongDigitList
     #endregion
 
     #region Splitting
-    private protected override IReadOnlyList<DigitList<ulong>> SplitAtIndicesGenericInternal(params int[] indices)
+    private protected override IReadOnlyList<DigitList<ulong>> SplitAtIndicesGenericInternal(int[] indices)
         => SplitAtIndices(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
@@ -730,7 +730,7 @@ public sealed record class BigIntegerDigitList : DigitList<BigInteger>
     #endregion
 
     #region Splitting
-    private protected override IReadOnlyList<DigitList<BigInteger>> SplitAtIndicesGenericInternal(params int[] indices)
+    private protected override IReadOnlyList<DigitList<BigInteger>> SplitAtIndicesGenericInternal(int[] indices)
         => SplitAtIndices(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
@@ -865,14 +865,18 @@ public abstract record class DigitList<TDigit>(
         => string.Join(separator, Digits.Select(d => d.ToString(digitFormat, digitFormatProvider)));
 
     #region Splitting
-    private protected sealed override IReadOnlyList<DigitList> SplitAtIndicesInternal(params int[] indices)
-        => SplitAtIndicesGenericInternal();
+    /// <inheritdoc cref="DigitList.SplitAtIndices(int[])"/>
+    public new IReadOnlyList<DigitList<TDigit>> SplitAtIndices(params int[] indices)
+        => SplitAtIndicesGenericInternal(indices);
+
+    private protected sealed override IReadOnlyList<DigitList> SplitAtIndicesInternal(int[] indices)
+        => SplitAtIndicesGenericInternal(indices);
 
     /// <inheritdoc cref="DigitList.SplitAtIndicesInternal(int[])"/>
-    private protected abstract IReadOnlyList<DigitList<TDigit>> SplitAtIndicesGenericInternal(params int[] indices);
+    private protected abstract IReadOnlyList<DigitList<TDigit>> SplitAtIndicesGenericInternal(int[] indices);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private protected List<ImmutableArraySegment<TDigit>> SplitIntoArraySegmentsAtIndices(params int[] indices)
+    private protected List<ImmutableArraySegment<TDigit>> SplitIntoArraySegmentsAtIndices(int[] indices)
     {
         var subArrays = new List<ImmutableArraySegment<TDigit>>();
         int lastIndex = 0;
@@ -1094,7 +1098,7 @@ public abstract record class DigitList : IDigitList
     /// </summary>
     /// <param name="indices"></param>
     /// <returns></returns>
-    private protected abstract IReadOnlyList<DigitList> SplitAtIndicesInternal(params int[] indices);
+    private protected abstract IReadOnlyList<DigitList> SplitAtIndicesInternal(int[] indices);
     #endregion
 
     #region Factory

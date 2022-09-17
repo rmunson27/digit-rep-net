@@ -77,11 +77,19 @@ public class DigitListTest
     public void TestSplitAtIndices()
     {
         var list = ByteDigitList.CreateRange(0, 1, 2, 3, 4, 5, 6);
-
         Assert.IsTrue(list.SplitAtIndices().SequenceEqual(new[] { list }));
         Assert.IsTrue(list.SplitAtIndices(0).SequenceEqual(new[] { ByteDigitList.Empty, list }));
         Assert.IsTrue(
             list.SplitAtIndices(2, 4).SequenceEqual(new[]
+            {
+                ByteDigitList.CreateRange(0, 1), ByteDigitList.CreateRange(2, 3), ByteDigitList.CreateRange(4, 5, 6)
+            }));
+
+        DigitList nonGenericList = list;
+        Assert.IsTrue(nonGenericList.SplitAtIndices().SequenceEqual(new[] { nonGenericList }));
+        Assert.IsTrue(nonGenericList.SplitAtIndices(0).SequenceEqual(new[] { ByteDigitList.Empty, nonGenericList }));
+        Assert.IsTrue(
+            nonGenericList.SplitAtIndices(2, 4).SequenceEqual(new[]
             {
                 ByteDigitList.CreateRange(0, 1), ByteDigitList.CreateRange(2, 3), ByteDigitList.CreateRange(4, 5, 6)
             }));
