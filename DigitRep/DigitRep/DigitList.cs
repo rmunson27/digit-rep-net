@@ -1129,7 +1129,7 @@ public abstract record class DigitList : IDigitList
         => EmptyFromDigitType(Bases.ShortestDigitType(Base));
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static DigitList EmptyFromDigitType([NameableEnum] DigitType Base) => Base.Value switch
+    private static DigitList EmptyFromDigitType(DigitType Base) => Base.Value switch
     {
         DigitType.Values.BigInteger => BigIntegerDigitList.Empty,
         DigitType.Values.ULong => ULongDigitList.Empty,
@@ -1308,7 +1308,7 @@ public abstract record class DigitList : IDigitList
             => NewFromDigitType(Bases.ShortestDigitType(Base));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Builder NewFromDigitType([NameableEnum] DigitType minSize)
+        private static Builder NewFromDigitType(DigitType minSize)
             => minSize.Value switch
             {
                 DigitType.Values.BigInteger => new BigIntegerDigitList.Builder(),
