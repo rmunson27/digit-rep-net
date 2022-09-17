@@ -805,6 +805,9 @@ public abstract record class DigitList<TDigit>(
     /// <inheritdoc/>
     public sealed override int Count => Digits.Length;
 
+    /// <inheritdoc/>
+    public sealed override DigitType DigitType => DigitType.FromRepresentedType(typeof(TDigit));
+
     #region Index
     /// <inheritdoc cref="DigitList.this[int]"/>
     public new TDigit this[[NonNegative] int index] => Digits[index];
@@ -861,6 +864,7 @@ public abstract record class DigitList<TDigit>(
         IFormatProvider? digitFormatProvider = null)
         => string.Join(separator, Digits.Select(d => d.ToString(digitFormat, digitFormatProvider)));
 
+    #region Splitting
     private protected sealed override IReadOnlyList<DigitList> SplitAtIndicesInternal(params int[] indices)
         => SplitAtIndicesGenericInternal();
 
@@ -902,6 +906,7 @@ public abstract record class DigitList<TDigit>(
 
         return subArrays;
     }
+    #endregion
 
     #region ToBuilder
     /// <inheritdoc cref="DigitList.ToBuilder"/>
@@ -989,6 +994,11 @@ public abstract record class DigitList : IDigitList
 
     /// <inheritdoc/>
     [NonNegative] public abstract int Count { get; }
+
+    /// <summary>
+    /// Gets a value representing the type of digit stored in this list.
+    /// </summary>
+    public abstract DigitType DigitType { get; }
 
     #region Index
     /// <inheritdoc/>
