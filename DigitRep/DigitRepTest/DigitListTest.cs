@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -85,6 +86,9 @@ public class DigitListTest
                 ByteDigitList.CreateRange(0, 1), ByteDigitList.CreateRange(2, 3), ByteDigitList.CreateRange(4, 5, 6)
             }));
 
+        var singleton = ByteDigitList.CreateRange(3);
+        Assert.IsTrue(singleton.SplitAtIndices(0).SequenceEqual(new[] { ByteDigitList.Empty, singleton }));
+
         Assert.ThrowsException<ArgumentNullException>(() => list.SplitAtIndices(null!));
         Assert.ThrowsException<IndexOutOfRangeException>(() => list.SplitAtIndices(7));
         Assert.ThrowsException<IndexOutOfRangeException>(() => list.SplitAtIndices(-1));
@@ -132,46 +136,36 @@ public class DigitListTest
         var equivalentLists2 = CreateEquivalentLists(2, 3, 4, 5);
         var equivalentLists3 = CreateEquivalentLists(1, 2);
 
-        foreach (var (lhs, rhs) in equivalentLists1.Zip(equivalentLists1))
+        foreach (var expected in equivalentLists1.Values)
         {
-            Assert.IsTrue(lhs.IsEquivalentTo(rhs), notEquivalentErrorMsg(lhs, rhs));
+            foreach (var actual in equivalentLists1.Values)
+            {
+                Assert.That.ListsAreEquivalent(expected, actual);
+            }
         }
-
-        foreach (var (lhs, rhs) in equivalentLists1.Zip(equivalentLists2))
+        foreach (var lhs in equivalentLists1.Values)
         {
-            Assert.IsFalse(lhs.IsEquivalentTo(rhs), equivalentErrorMsg(lhs, rhs));
-            Assert.IsFalse(rhs.IsEquivalentTo(lhs), equivalentErrorMsg(rhs, lhs));
+            foreach (var rhs in equivalentLists2.Values)
+            {
+                Assert.That.ListsAreNotEquivalent(lhs, rhs);
+            }
         }
-
-        foreach (var (lhs, rhs) in equivalentLists1.Zip(equivalentLists3))
+        foreach (var lhs in equivalentLists1.Values)
         {
-            Assert.IsFalse(lhs.IsEquivalentTo(rhs), equivalentErrorMsg(lhs, rhs));
-            Assert.IsFalse(rhs.IsEquivalentTo(lhs), equivalentErrorMsg(rhs, lhs));
+            foreach (var rhs in equivalentLists3.Values)
+            {
+                Assert.That.ListsAreNotEquivalent(lhs, rhs);
+            }
         }
-
-        static string notEquivalentErrorMsg(DigitList lhs, DigitList rhs)
-            => $"Lists {lhs} ({GetListTypeString(lhs)}) and {rhs} ({GetListTypeString(rhs)}) were not equivalent.";
-
-        static string equivalentErrorMsg(DigitList lhs, DigitList rhs)
-            => $"Lists {lhs} ({GetListTypeString(lhs)}) and {rhs} ({GetListTypeString(rhs)}) were equivalent.";
     }
 
-    private static DigitList[] CreateEquivalentLists(params byte[] digits) => new DigitList[]
-    {
-        ByteDigitList.CreateRange(digits),
-        UShortDigitList.CreateRange(digits.Select(b => (ushort)b)),
-        UIntDigitList.CreateRange(digits.Select(b => (uint)b)),
-        ULongDigitList.CreateRange(digits.Select(b => (ulong)b)),
-        BigIntegerDigitList.CreateRange(digits.Select(b => (BigInteger)b)),
-    };
-
-    private static string GetListTypeString(DigitList list) => list switch
-    {
-        ByteDigitList => "byte",
-        UShortDigitList => "ushort",
-        UIntDigitList => "uint",
-        ULongDigitList => "ulong",
-        BigIntegerDigitList => "BigInteger",
-        _ => "<ERROR_TYPE>"
-    };
+    private static ImmutableDictionary<Type, DigitList> CreateEquivalentLists(params byte[] digits)
+        => ImmutableDictionary.CreateRange(new KeyValuePair<Type, DigitList>[]
+        {
+            new(typeof(byte), ByteDigitList.CreateRange(digits)),
+            new(typeof(ushort), UShortDigitList.CreateRange(digits.Select(b => (ushort)b))),
+            new(typeof(uint), UIntDigitList.CreateRange(digits.Select(b => (uint)b))),
+            new(typeof(ulong), ULongDigitList.CreateRange(digits.Select(b => (ulong)b))),
+            new(typeof(BigInteger), BigIntegerDigitList.CreateRange(digits.Select(b => (BigInteger)b))),
+        });
 }

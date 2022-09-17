@@ -1,12 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;netcoreapp3.1;net4.7.2</TargetFrameworks>
     <RootNamespace>Rem.Core.Math.DigitsTest</RootNamespace>
-    <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+	<PropertyGroup Label="Language">
+		<LangVersion>10.0</LangVersion>
+
+		<Nullable>enable</Nullable>
+		<ImpliticUsings>enable</ImpliticUsings>
+	</PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
