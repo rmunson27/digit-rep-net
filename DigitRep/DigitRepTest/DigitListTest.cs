@@ -95,37 +95,6 @@ public class DigitListTest
         Assert.ThrowsException<ArgumentException>(() => list.SplitAtIndices(4, 2));
     }
 
-    private protected static List<IEnumerable<byte>> SplitIntoArraySegmentsAtIndices(ByteDigitList list, params int[] indices)
-    {
-        var subArrays = new List<IEnumerable<byte>>();
-        int lastIndex = 0;
-        IEnumerable<byte> enumerable = list;
-
-        // Add all the subsegments indicated by the indices
-        for (int i = 0; i < indices.Length; i++)
-        {
-            var currentIndex = indices[i];
-            if (currentIndex < lastIndex)
-            {
-                throw new ArgumentException(
-                    "Indices passed in must be non-negative and in (non-strictly) ascending order.", nameof(indices));
-            }
-            else if (currentIndex >= list.Count)
-            {
-                throw new IndexOutOfRangeException($"Index {currentIndex} was out of range of the digit list.");
-            }
-
-            subArrays.Add(enumerable.Skip(lastIndex).Take(currentIndex - lastIndex));
-
-            lastIndex = currentIndex;
-        }
-
-        // Add the final subsegment
-        subArrays.Add(enumerable.Skip(lastIndex).Take(list.Count - lastIndex));
-
-        return subArrays;
-    }
-
     /// <summary>
     /// Tests the <see cref="DigitList.IsEquivalentTo(DigitList)"/> method.
     /// </summary>
