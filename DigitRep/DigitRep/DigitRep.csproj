@@ -4,10 +4,8 @@
 		<Product>Rem.Core.Numerics.Digits</Product>
 		<PackageId>Rem.Core.Numerics.Digits</PackageId>
 		<RootNamespace>Rem.Core.Numerics.Digits</RootNamespace>
-		<Version>1.1.2</Version>
-		<Description>
-			A lightweight utility that can be used to represent a numerical value in digits of any base.
-		</Description>
+		<Version>1.1.3</Version>
+		<Description>A lightweight utility that can be used to represent a numerical value in digits of any base.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Authors>Richard E. Munson</Authors>
 		<Copyright>Richard E. Munson, 2022</Copyright>
@@ -15,11 +13,9 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="Outputs">
-		<TargetFrameworks>net461;netstandard2.0;net5.0</TargetFrameworks>
+		<TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
-		<PackageReleaseNotes>
-			Patched a bug in digit list index splitting, and added digit type getters for digit lists.
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Upgraded various packages, lowered minimum `System.Collections.Immutable` requirement to version 5.0, and removed .NET 5.0 target.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Documentation" Condition="'$(Configuration)' == 'Release'">
@@ -27,7 +23,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Label="Language">
-		<LangVersion>10.0</LangVersion>
+		<LangVersion>11.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
@@ -42,7 +38,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+	    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
 
 		<Using Remove="System.Net.Http" /><!-- This implicit using is for a package this library does not reference. -->
 	</ItemGroup>
@@ -57,13 +53,13 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-	    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+	    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	    <PackageReference Include="Rem.Core.Attributes" Version="1.3.0" />
-        <PackageReference Include="Rem.Core.ComponentModel" Version="1.1.2" />
-		<PackageReference Include="Rem.Core.Utilities.FluentThrower" Version="1.0.3" />
+	    <PackageReference Include="Rem.Core.Attributes" Version="1.4.0" />
+        <PackageReference Include="Rem.Core.ComponentModel" Version="1.2.9" />
+		<PackageReference Include="Rem.Core.Utilities.FluentThrower" Version="1.0.4" />
 	</ItemGroup>
 
 </Project>
